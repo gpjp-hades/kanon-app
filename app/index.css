@@ -32,7 +32,7 @@ nav div, ul {
 .dice {
     position: absolute;
     top: calc(50% + 20px);
-    right: 20%;
+    left: calc(10% + 300px);
     font-size: 30px;
 }
 #book {
@@ -42,4 +42,15 @@ nav div, ul {
     top: calc(50% - 35px);
     opacity: 0;
     width: calc(100% - 350px);
+}
+.alert {
+    position: absolute;
+    top: 65px;
+    width: 40%;
+    left: 30%
+}
+.panel-body {
+    height: calc(100vh - 140px);
+    white-space: nowrap;
+    overflow: scroll
 }

@@ -64,7 +64,7 @@ main = new class {
         if (book) {
             $('#book').html(book.toHTML())
         } else {
-            $('#book').html("Všechny knihyjiž byly vybrány")
+            $('#book').html("Všechny knihy již byly vylosovány")
         }
         $('#book').delay(1000).animate({opacity: 1}, 800)
     }
@@ -103,8 +103,22 @@ main = new class {
 
                 this.changer = setInterval(this.numberChanger, 200)
             } else {
-                $('#status').html("Student " + name + " nenalezen")
+                this.status("Student " + name + " nenalezen")
             }
+        }
+    }
+
+    status(message) {
+        $('#status').parent().removeAttr('style')
+        $('#status').html(message)
+        $("#status").parent().fadeTo(2000, 500).slideUp(500);
+    }
+    validate() {
+        if ($('#pupils').val()) {
+            $("#continue-modal").modal()
+        } else {
+            this.status('Zvolte studenta')
+            return false
         }
     }
 
@@ -142,7 +156,7 @@ main = new class {
                     this.kanon.fromFile(output)
 
                     this.save('kanon', this.kanon)
-                    $('#status').html('Načteno ' + this.kanon.length + ' knih')
+                    this.status('Načteno ' + this.kanon.length + ' knih')
                     this.showBooks()
                 })
             })
@@ -163,9 +177,9 @@ main = new class {
                         if (err) throw err
                         
                         if (this.pupils.has(name)) {
-                            $('#status').html('Kánon studenta ' + name + ' byl aktualizován')
+                            this.status('Kánon studenta <b>' + name + '</b> byl aktualizován')
                         } else {
-                            $('#status').html('Student ' + name + ' byl přidán')
+                            this.status('Student <b>' + name + '</b> byl přidán')
                         }
 
                         this.pupils.fromFile(name, output.map(e => {return e[0]}));

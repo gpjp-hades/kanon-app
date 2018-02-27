@@ -36,8 +36,9 @@ class kanon {
     }
 
     toString() {
-        return this.books.map(e => {if (e) return e.toString()}).join("<br />\n")
+        return this.books.reduce((ret, e) => {if (e) ret.push(e.toString()); return ret}, []).join("<br />\n")
     }
+
 }
 
 module.exports = kanon

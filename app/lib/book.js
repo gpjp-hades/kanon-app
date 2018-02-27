@@ -9,7 +9,7 @@ class Book {
     }
 
     toString() {
-        return this.author + ": " + this.name
+        return this.author + (this.author?": ":"") + "<b>" + this.name + "</b>"
     }
 
     toHTML() {

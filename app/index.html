@@ -31,28 +31,56 @@
 		</nav>
 		<div class="normalMode container">
 			<div class="row">
-				<div class="col-sm-5">
-					<span>Pro ukončení stiskněte <kbd>Ctrl+Shift+K</kbd></span><br />
-					<button class="btn btn-success" onclick="main.startUserMode()">Spustit</button>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-sm-5">
-					<select id='pupils' class="form-control">
+				<div class="col-sm-4 col-sm-offset-1">
+					<select id='pupils' class="form-control" required>
 						<option selected disabled>Zvolte žáka</option>
 					</select>
+					<br />
+					<button class="btn btn-success" onclick="return main.validate()">Spustit</button>
+					<br />
+					<br />
+					<label>Dnes vyřazené knihy:</label>
+					<div class="panel panel-default">
+							<div class="panel-body" style='height: calc(100vh - 247px);'></div>
+					</div>
+				</div>
+				<div class="col-sm-5 col-sm-offset-1">
+					<label>Kánon:</label>
+					<div class="panel panel-default">
+							<div id='books' class="panel-body"></div>
+					</div>
 				</div>
 			</div>
-			
-			<div id='status'></div>
-			<div id='books' style='height: 100px; overflow: auto'></div>
-			
 		</div>
+
+		<div class="alert alert-info alert-dismissible" style="display: none">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<span id='status'></span>
+		</div>
+
 		<div class="container userMode">
 			<span id="number"></span>
 			<button class="btn btn-lg btn-default dice" onclick='main.getBook()'>Vylosovat knihu &nbsp;<kbd>Enter</kbd></button>
 			<div id="book"></div>
 		</div>
+		<div id="continue-modal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Přejít k losování</h4>
+			</div>
+			<div class="modal-body">
+				Pro ukončení losování, stiskněte <kbd>Ctrl + Shift + <b>K</b></kbd>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick='main.startUserMode()'>Pokračovat</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Zrušit</button>
+			</div>
+			</div>
+		</div>
+		</div>
+		
 		<div id="close-modal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
