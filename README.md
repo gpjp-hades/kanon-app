@@ -5,4 +5,4 @@ Designed specifically for use with **kanon** web app.
 `npm install`
 
 # Start
-`./node_modules/.bin/electron .`
+`npm start`
