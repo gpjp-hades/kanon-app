@@ -1,0 +1,29 @@
+{
+  "name": "kanon",
+  "version": "0.1.0",
+  "main": "main.js",
+  "description": "Basic app for choosing kanon",
+  "dependencies": {
+    "bootstrap": "^3.0.0",
+    "csv-parse": "^2.0.4",
+    "electron": "^1.8.2",
+    "electron-json-storage": "^4.0.2",
+    "jquery": "^3.3.1",
+    "mousetrap": "^1.6.1",
+    "popper.js": "^1.12.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gpjp-hades/kanon-app.git"
+  },
+  "author": "Keombre <keombre8@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gpjp-hades/kanon-app/issues"
+  },
+  "homepage": "https://github.com/gpjp-hades/kanon-app#readme"
+}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Kánon</title>
+      <script src="bundle.js"></script>
+      <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    </head>
+    <body>
+      <button onclick='main.close()'>close</button>
+      <button id='loadKanon' onclick="main.loadKanon()">Načíst kánon</button>
+      <button onclick="main.loadPupil()">Načíst žáka</button>
+      <button onclick="main.startUserMode()">Smpustit režim uživatele</button>
+      pro ukončení stiskněte <kbd>Ctrl+Shift+K</kbd>
+      
+      <div id='mode'>Normální režim</div>
+      
+      <div id='status'></div>
+      <div id='books' style='height: 100px; overflow: auto'></div>
+      <div id='pupils'></div>
+    </body>
+  </html>
