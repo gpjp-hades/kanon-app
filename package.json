@@ -2,7 +2,7 @@
   "name": "Kanon",
   "version": "0.1.0",
   "main": "main.js",
-  "description": "Basic app for choosing kanon",
+  "description": "Maturita GPJP",
   "dependencies": {
     "bootstrap": "^3.0.0",
     "csv-parse": "^2.0.4",
