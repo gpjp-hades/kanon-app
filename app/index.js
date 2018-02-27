@@ -33,19 +33,20 @@ main = new class {
                 this.showPupils()
             }
 
-            if (length in data.used) {
-                this.used.fromJSON(data.used)
-            }
+            this.used.fromJSON(data.used)
+            this.showUsed()
         })
 
         Mousetrap.bind(['command+shift+k', 'ctrl+shift+k'], _ => {
             this.endUserMode()
         })
+        
     }
 
     close() {
         BrowserWindow.close()
     }
+
     mini() {
         BrowserWindow.minimize()
     }
@@ -56,7 +57,7 @@ main = new class {
 
     getBook() {
         clearInterval(this.changer)
-        Mousetrap.unbind('enter');
+        Mousetrap.unbind('enter')
         $('.dice').animate({opacity: 0, width: 0}, 800)
 
         let book = this.used.getBook(this.pupil)
@@ -73,7 +74,9 @@ main = new class {
         if (this.userMode) {
             this.userMode = false
 
-            Mousetrap.unbind('enter');
+            Mousetrap.unbind('enter')
+
+            this.showUsed()
 
             $('#book').removeAttr('style')
             $('.dice').removeAttr('style')
@@ -111,8 +114,9 @@ main = new class {
     status(message) {
         $('#status').parent().removeAttr('style')
         $('#status').html(message)
-        $("#status").parent().fadeTo(2000, 500).slideUp(500);
+        $("#status").parent().fadeTo(2000, 500).slideUp(500)
     }
+
     validate() {
         if ($('#pupils').val()) {
             $("#continue-modal").modal()
@@ -120,6 +124,10 @@ main = new class {
             this.status('Zvolte studenta')
             return false
         }
+    }
+
+    showUsed() {
+        $("#used").html(this.used.toHTML())
     }
 
     showBooks() {
@@ -182,7 +190,7 @@ main = new class {
                             this.status('Student <b>' + name + '</b> byl přidán')
                         }
 
-                        this.pupils.fromFile(name, output.map(e => {return e[0]}));
+                        this.pupils.fromFile(name, output.map(e => {return e[0]}))
 
                         this.save('pupils', this.pupils)
                         this.showPupils()

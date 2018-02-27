@@ -8,7 +8,9 @@ class used {
             throw "passed invalid kanon"
         
         this.kanon = arg
-        this.list = []
+        this.date = new Date()
+        this.list = {}
+        this.list[this.date.getDate()] = []
     }
 
     fromJSON(data) {
@@ -19,12 +21,18 @@ class used {
         return this.list
     }
 
+    toHTML() {
+        return this.list[this.date.getDate()].map(e => {
+            return this.kanon.get(e).toString()
+        }).join("<br />")
+    }
+
     getBook(arg) {
         if (!(arg instanceof pupil))
             throw "passed invalid pupil"
         
         let selectable = arg.books.filter(e => {
-            return !this.list.includes(e.id)
+            return !this.list[this.date.getDate()].includes(e.id)
         })
         
         if (!selectable.length)
@@ -32,7 +40,7 @@ class used {
         
         
         let book = selectable[Math.floor(Math.random()*selectable.length)]
-        this.list.push(book.id)
+        this.list[this.date.getDate()].push(book.id)
         
         return book
     }

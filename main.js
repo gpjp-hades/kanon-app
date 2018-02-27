@@ -15,7 +15,7 @@ const {app, BrowserWindow} = require('electron')
       minHeight: 500
     })
 
-    win.setMenu(null);
+    win.setMenu(null)
 
     win.loadURL(url.format({
       pathname: path.join(__dirname, 'app/index.html'),
