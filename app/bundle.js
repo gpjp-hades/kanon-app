@@ -16,17 +16,23 @@ main = new class {
     constructor() {
 
         this.userMode = false
+        this.changer
+        this.books
+        this.name
+        this.pupils = []
 
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
             if (err) throw error
           
-            this.kanon = data.kanon
-            if (this.kanon)
+            if (data.kanon.length) {
+                this.kanon = data.kanon
                 this.showBooks()
+            }
 
-            this.pupils = data.pupils
-            if (this.pupils)
+            if (data.pupils.length) {
+                this.pupils = data.pupils
                 this.showPupils()
+            }
 
             this.used = data.used
         })
@@ -36,17 +42,36 @@ main = new class {
         })
     }
 
+    numberChanger() {
+        $('#number').html(Math.floor(Math.random()*20)+1)
+    }
+
+    getBook() {
+        clearInterval(this.changer)
+        let book = this.books[Math.floor(Math.random()*20)]
+        $('#book').html(book)
+    }
+
     endUserMode() {
         if (this.userMode) {
             this.userMode = false
             $('#mode').html('Normální režim')
+            clearInterval(this.changer)
         }
     }
 
     startUserMode() {
         if (!this.userMode) {
-            this.userMode = true
-            $('#mode').html('Režim uživatele')
+            name = $('#pupil').val()
+            if (name in this.pupils) {
+                this.books = this.pupils[name]
+                this.name = name
+
+                this.userMode = true
+                $('#mode').html('Režim uživatele')
+                this.changer = setInterval(this.numberChanger, 200)
+            }
+            console.log(name)
         }
     }
 
@@ -56,7 +81,7 @@ main = new class {
     }
 
     showPupils() {
-        $('#pupils').html(Object.keys(main.pupils).join('<br />'))
+        $('#pupils').html(Object.keys(this.pupils).join('<br />'))
     }
 
     save(target, data) {
@@ -92,7 +117,7 @@ main = new class {
                 if (err)
                     return console.log(err)
                 
-                let name = data.substr(0, data.indexOf("\n"))
+                let name = data.substr(0, data.indexOf("\n")-1)
 
                 parse(data.substr(data.indexOf("\n")+1), {delimiter: ';'}, (err, output) => {
                     if (err)
@@ -103,7 +128,6 @@ main = new class {
                     } else {
                         $('#status').html('Student ' + name + ' byl přidán')
                     }
-
                     this.pupils[name] = output
                     this.save('pupils', this.pupils)
                     this.showPupils()
