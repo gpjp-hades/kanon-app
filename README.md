@@ -1,7 +1,7 @@
 # Kánon local app
 Designed specifically for use with **kanon** web app.
 
-# Instalation
+# Installation
 `npm install`
 
 # Start
