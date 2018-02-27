@@ -12,7 +12,8 @@ const {app, BrowserWindow} = require('electron')
       //fullscreen: true,
       frame: false,
       minWidth: 768,
-      minHeight: 500
+      minHeight: 500,
+      title: "Maaturita GPJP"
     })
 
     win.setMenu(null)

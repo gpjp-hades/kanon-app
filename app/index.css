@@ -32,7 +32,7 @@ nav div, ul {
 .dice {
     position: absolute;
     top: calc(50% + 20px);
-    left: calc(10% + 300px);
+    right: calc(50% - 307px);
     font-size: 30px;
 }
 #book {
