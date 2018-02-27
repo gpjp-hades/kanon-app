@@ -1,12 +1,45 @@
 .normalMode {
-    display: block;
+    display: initial;
 }
 .userMode {
     display: none;
 }
+body {
+    overflow: hidden;
+}
 nav {
-    -webkit-app-region: drag
+    -webkit-app-region: drag;
+    cursor: default;
 }
 nav div, ul {
     -webkit-app-region: no-drag;
+}
+#number {
+    position: absolute;
+    top: calc(50% - 50px);
+    left: 10%;
+    font-size: 100px;
+    width: 200px;
+    height: 200px;
+    line-height: 200px;
+    text-align: center;
+    background: #222;
+    border-radius: 100%;
+    color: #fff;
+    box-shadow: #222 0px 5px 13px -2px;
+    font-family: fantasy;
+}
+.dice {
+    position: absolute;
+    top: calc(50% + 20px);
+    right: 20%;
+    font-size: 30px;
+}
+#book {
+    position: absolute;
+    font-size: 38px;
+    left: calc(10% + 300px);
+    top: calc(50% - 35px);
+    opacity: 0;
+    width: calc(100% - 350px);
 }

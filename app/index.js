@@ -56,31 +56,51 @@ main = new class {
 
     getBook() {
         clearInterval(this.changer)
+        Mousetrap.unbind('enter');
+        $('.dice').animate({opacity: 0, width: 0}, 800)
+
         let book = this.used.getBook(this.pupil)
         this.save('used', this.used)
         if (book) {
-            $('#book').html(book.toString())
+            $('#book').html(book.toHTML())
         } else {
             $('#book').html("Všechny knihyjiž byly vybrány")
         }
+        $('#book').delay(1000).animate({opacity: 1}, 800)
     }
 
     endUserMode() {
         if (this.userMode) {
             this.userMode = false
-            $('#mode').html('Normální režim')
+
+            Mousetrap.unbind('enter');
+
+            $('#book').removeAttr('style')
+            $('.dice').removeAttr('style')
+
+            $(".normalMode").css("display", "initial")
+            $(".userMode").css("display", "none")
+
             clearInterval(this.changer)
         }
     }
 
     startUserMode() {
         if (!this.userMode) {
-            name = $('#pupil').val()
+            name = $('#pupils').val()
             if (this.pupils.has(name)) {
+
+                Mousetrap.bind('enter', _ => {
+                    this.getBook()
+                })
+
                 this.pupil = this.pupils.get(name)
 
                 this.userMode = true
-                $('#mode').html('Režim uživatele')
+
+                $(".normalMode").css("display", "none")
+                $(".userMode").css("display", "initial")
+
                 this.changer = setInterval(this.numberChanger, 200)
             } else {
                 $('#status').html("Student " + name + " nenalezen")
@@ -95,7 +115,12 @@ main = new class {
     }
 
     showPupils() {
-        $('#pupils').html(this.pupils.toString())
+        this.pupils.toArray().forEach(name => {
+            $('#pupils').append($('<option>', {
+                value: name,
+                text: name
+            }))
+        })
     }
 
     save(target, data) {

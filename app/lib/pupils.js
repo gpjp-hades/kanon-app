@@ -53,10 +53,10 @@ class pupils {
         return this.list.map(e => {if (e) return e.toJSON()})
     }
 
-    toString() {
+    toArray() {
         return this.list.map(e => {
             return e.name
-        }).join("<br />")
+        })
     }
 }
 

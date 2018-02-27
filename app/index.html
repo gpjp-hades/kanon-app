@@ -10,7 +10,7 @@
 	<body>
 		<nav class="navbar navbar-inverse navbar-static-top">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="#">Maturita GPJP <small> - Volba knihy</small></a>
+				<span class="navbar-brand" style="color: #fff">Maturita GPJP <small> - Volba knihy</small></span>
 			</div>
 			<ul class="normalMode nav navbar-nav navbar-right">
 				<li class="dropdown">
@@ -25,24 +25,32 @@
 						</li>
 					</ul>
 				</li>
-				<li style="margin-right: 5px"><button class="btn btn-info navbar-btn pull-right" onclick="main.mini()">_</button></li>
-				<li style="margin-right: 25px"><button class="btn btn-danger navbar-btn pull-right" data-toggle="modal" data-target="#close-modal">&times;</button></li>
+				<li style="margin-right: 7px"><button class="btn btn-xs btn-info navbar-btn pull-right" onclick="main.mini()">_</button></li>
+				<li style="margin-right: 25px"><button class="btn btn-xs btn-danger navbar-btn pull-right" data-toggle="modal" data-target="#close-modal">&times;</button></li>
 			</ul>
 		</nav>
-		<div id="normal" class="container normalMode">
-			<button onclick="main.startUserMode()">Spustit režim uživatele</button>
-			pro ukončení stiskněte <kbd>Ctrl+Shift+K</kbd>
-			
-			<div id='mode'>Normální režim</div>
+		<div class="normalMode container">
+			<div class="row">
+				<div class="col-sm-5">
+					<span>Pro ukončení stiskněte <kbd>Ctrl+Shift+K</kbd></span><br />
+					<button class="btn btn-success" onclick="main.startUserMode()">Spustit</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-5">
+					<select id='pupils' class="form-control">
+						<option selected disabled>Zvolte žáka</option>
+					</select>
+				</div>
+			</div>
 			
 			<div id='status'></div>
 			<div id='books' style='height: 100px; overflow: auto'></div>
-			<div id='pupils'></div>
-			<input id='pupil'>
+			
 		</div>
-		<div id="user" class="container userMode">
-			<div id="number"></div>
-			<button onclick='main.getBook()'>Vylosovat knihu</button>
+		<div class="container userMode">
+			<span id="number"></span>
+			<button class="btn btn-lg btn-default dice" onclick='main.getBook()'>Vylosovat knihu &nbsp;<kbd>Enter</kbd></button>
 			<div id="book"></div>
 		</div>
 		<div id="close-modal" class="modal fade" role="dialog">

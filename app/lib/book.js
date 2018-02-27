@@ -9,7 +9,11 @@ class Book {
     }
 
     toString() {
-        return this.author + ": " + this.name + "(" + this.region + ")"
+        return this.author + ": " + this.name
+    }
+
+    toHTML() {
+        return "<small>" + this.author + ":</small><br />" + this.name
     }
 
     toJSON(key) {
