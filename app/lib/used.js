@@ -15,6 +15,8 @@ class used {
 
     fromJSON(data) {
         this.list = data
+        if (!(this.date.getDate() in this.list))
+            this.list[this.date.getDate()] = []
     }
 
     toJSON() {

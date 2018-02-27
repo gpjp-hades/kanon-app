@@ -23,18 +23,20 @@ main = new class {
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
             if (err) throw err
             
-            if (length in data.kanon) {
+            if (data.kanon instanceof Array) {
                 this.kanon.fromJSON(data.kanon)
                 this.showBooks()
             }
 
-            if (length in data.pupils) {
+            if (data.pupils instanceof Array) {
                 this.pupils.fromJSON(data.pupils)
                 this.showPupils()
             }
 
-            this.used.fromJSON(data.used)
-            this.showUsed()
+            if (data.used instanceof Object) {
+                this.used.fromJSON(data.used)
+                this.showUsed()
+            }
         })
 
         Mousetrap.bind(['command+shift+k', 'ctrl+shift+k'], _ => {
