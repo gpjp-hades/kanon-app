@@ -29,13 +29,14 @@ class pupils {
             return e.name == name
         })
 
-        books = books.map(e => {
+        books = books.reduce((ret, e) => {
             if (this.kanon.has(e))
-                return this.kanon.get(e)
-        })
+                ret.push(this.kanon.get(e))
+            return ret
+        }, [])
 
         if (present) {
-            this.list[present.id].books = books
+            this.list[this.list.indexOf(present)].books = books
         } else {
             this.list.push(new pupil(name, books))
         }

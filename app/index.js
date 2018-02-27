@@ -46,6 +46,9 @@ main = new class {
     close() {
         BrowserWindow.close()
     }
+    mini() {
+        BrowserWindow.minimize()
+    }
 
     numberChanger() {
         $('#number').html(Math.floor(Math.random()*20)+1)
@@ -87,6 +90,7 @@ main = new class {
 
     showBooks() {
         $('#loadKanon').html('Aktualizovat kánon')
+        $('#loadPupil').removeAttr('class')
         $('#books').html(this.kanon.toString())
     }
 

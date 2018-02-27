@@ -1,0 +1,12 @@
+.normalMode {
+    display: block;
+}
+.userMode {
+    display: none;
+}
+nav {
+    -webkit-app-region: drag
+}
+nav div, ul {
+    -webkit-app-region: no-drag;
+}

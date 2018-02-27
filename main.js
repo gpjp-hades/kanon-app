@@ -6,10 +6,13 @@ const {app, BrowserWindow} = require('electron')
   
   function createWindow () {
     win = new BrowserWindow({
-      width: 800,
-      height: 600,
-      icon: "main.ico",
+      width: 768,
+      height: 500,
+      icon: "app/main.ico",
       //fullscreen: true
+      frame: false,
+      minWidth: 768,
+      minHeight: 500
     })
 
     win.setMenu(null);
@@ -21,7 +24,7 @@ const {app, BrowserWindow} = require('electron')
     }))
 
     win.webContents.openDevTools()
-  
+
     win.on('closed', () => {
       win = null
     })
