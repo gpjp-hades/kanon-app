@@ -4,7 +4,7 @@ const book = require('./book.js')
 class kanon {
     constructor(books = []) {
         this.books = books
-        this.length
+        this.length = 0
     }
 
     fromJSON(books) {
@@ -12,6 +12,14 @@ class kanon {
             if (e) return new book(...e)
         })
         this.length = this.books.length
+    }
+
+    has(id) {
+        return id in this.books
+    }
+
+    get(id) {
+        return this.books[id]
     }
 
     fromFile(args) {

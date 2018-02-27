@@ -1,16 +1,23 @@
 'use strict'
-const book = require('./book.js')
+const Book = require('./book.js')
 
 class pupil {
-    constructor() {
-        this.books
+    constructor(name, books = []) {
+        this.name = name
+        if (books instanceof Array)
+            this.books = books
+
     }
 
     addBook(book) {
-        if (book.constructor.name != "book")
+        if (book instanceof Book)
             throw "passed non valid book"
         
         this.books[book.id] = book
+    }
+
+    toJSON() {
+        return {"name": this.name, "books": this.books.map(e => {return e.id})}
     }
 }
 

@@ -5,14 +5,10 @@ const parse = require('csv-parse')
 const {dialog} = require('electron').remote
 const BrowserWindow = require('electron').remote.getCurrentWindow()
 const storage = require('electron-json-storage')
-var Mousetrap = require('mousetrap')
-const {kanon, pupil} = require('./lib')
+const Mousetrap = require('mousetrap')
+const {kanon, pupils, used} = require('./lib')
 
 main = new class {
-
-    close() {
-        BrowserWindow.close()
-    }
 
     constructor() {
 
@@ -20,7 +16,8 @@ main = new class {
         this.changer
         this.books
         this.name
-        this.kanon = new kanon();
+        this.kanon = new kanon()
+        this.pupils = new pupils(this.kanon)
 
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
             if (err) throw err
@@ -30,8 +27,10 @@ main = new class {
                 this.showBooks()
             }
 
-            this.pupils = data.pupils.data // resolve rich naming scheme bug
-            this.showPupils()
+            if (length in data.pupils) {
+                this.pupils.fromJSON(data.pupils)
+                this.showPupils()
+            }
 
             this.used = data.used
         })
@@ -39,6 +38,10 @@ main = new class {
         Mousetrap.bind(['command+shift+k', 'ctrl+shift+k'], _ => {
             this.endUserMode()
         })
+    }
+
+    close() {
+        BrowserWindow.close()
     }
 
     numberChanger() {
@@ -80,7 +83,7 @@ main = new class {
     }
 
     showPupils() {
-        $('#pupils').html(Object.keys(this.pupils).join('<br />'))
+        $('#pupils').html(this.pupils.toString())
     }
 
     save(target, data) {
@@ -122,18 +125,15 @@ main = new class {
                     parse(data.substr(data.indexOf("\n")+1), {delimiter: ';'}, (err, output) => {
                         if (err) throw err
                         
-                        if (name in this.pupils) {
+                        if (this.pupils.has(name)) {
                             $('#status').html('Kánon studenta ' + name + ' byl aktualizován')
                         } else {
                             $('#status').html('Student ' + name + ' byl přidán')
                         }
-                        
-                        console.log(output)
-                        let pupil = new pupil()
-                        
-                        this.pupils.push(pupil)
 
-                        //this.save('pupils', this.pupils)
+                        this.pupils.fromFile(name, output.map(e => {return e[0]}));
+
+                        this.save('pupils', this.pupils)
                         this.showPupils()
                     })
                 })

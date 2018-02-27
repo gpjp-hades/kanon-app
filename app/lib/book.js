@@ -1,6 +1,6 @@
 'use strict'
 
-class book {
+class Book {
     constructor(id, region, author, name) {
         this.id = id
         this.name = name
@@ -17,4 +17,4 @@ class book {
     }
 }
 
-module.exports = book
+module.exports = Book
