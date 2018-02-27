@@ -6,6 +6,7 @@ const {dialog} = require('electron').remote
 const BrowserWindow = require('electron').remote.getCurrentWindow()
 const storage = require('electron-json-storage')
 var Mousetrap = require('mousetrap')
+const {kanon, pupil} = require('./lib')
 
 main = new class {
 
@@ -19,20 +20,18 @@ main = new class {
         this.changer
         this.books
         this.name
-        this.pupils = []
+        this.kanon = new kanon();
 
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
-            if (err) throw error
-          
-            if (data.kanon.length) {
-                this.kanon = data.kanon
+            if (err) throw err
+            
+            if (length in data.kanon) {
+                this.kanon.fromJSON(data.kanon)
                 this.showBooks()
             }
 
-            if (data.pupils.length) {
-                this.pupils = data.pupils
-                this.showPupils()
-            }
+            this.pupils = data.pupils.data // resolve rich naming scheme bug
+            this.showPupils()
 
             this.used = data.used
         })
@@ -49,6 +48,7 @@ main = new class {
     getBook() {
         clearInterval(this.changer)
         let book = this.books[Math.floor(Math.random()*20)]
+        this.used
         $('#book').html(book)
     }
 
@@ -71,13 +71,12 @@ main = new class {
                 $('#mode').html('Režim uživatele')
                 this.changer = setInterval(this.numberChanger, 200)
             }
-            console.log(name)
         }
     }
 
     showBooks() {
         $('#loadKanon').html('Aktualizovat kánon')
-        $('#books').html(this.kanon.map(e => e.join(', ')).join('<br />'))
+        $('#books').html(this.kanon.toString())
     }
 
     showPupils() {
@@ -86,7 +85,7 @@ main = new class {
 
     save(target, data) {
         storage.set(target, data, function (err) {
-            if (err) throw error
+            if (err) throw err
         })
     }
 
@@ -95,13 +94,14 @@ main = new class {
 
         if (file) {
             fs.readFile(file[0], 'utf8', (err, data) => {
-                if (err) throw error
+                if (err) throw err
 
                 parse(data, {delimiter: ';'}, (err, output) => {
-                    if (err) throw error
+                    if (err) throw err
 
-                    this.kanon = output
-                    this.save('kanon', output)
+                    this.kanon.fromFile(output)
+
+                    this.save('kanon', this.kanon)
                     $('#status').html('Načteno ' + this.kanon.length + ' knih')
                     this.showBooks()
                 })
@@ -110,27 +110,32 @@ main = new class {
     }
 
     loadPupil() {
-        let file = dialog.showOpenDialog({properties: ['openFile'], filters: [{name: 'Student', extensions: ['gms']}]})
+        let files = dialog.showOpenDialog({properties: ['openFile', 'multiSelections'], filters: [{name: 'Student', extensions: ['gms']}]})
         
-        if (file) {
-            fs.readFile(file[0], 'utf8', (err, data) => {
-                if (err)
-                    return console.log(err)
-                
-                let name = data.substr(0, data.indexOf("\n")-1)
-
-                parse(data.substr(data.indexOf("\n")+1), {delimiter: ';'}, (err, output) => {
-                    if (err)
-                        return console.log(err)
+        if (files) {
+            files.forEach(file => {
+                fs.readFile(file, 'utf8', (err, data) => {
+                    if (err) throw err
                     
-                    if (name in this.pupils) {
-                        $('#status').html('Kánon studenta ' + name + ' byl aktualizován')
-                    } else {
-                        $('#status').html('Student ' + name + ' byl přidán')
-                    }
-                    this.pupils[name] = output
-                    this.save('pupils', this.pupils)
-                    this.showPupils()
+                    let name = data.substr(0, data.indexOf("\n")-1)
+    
+                    parse(data.substr(data.indexOf("\n")+1), {delimiter: ';'}, (err, output) => {
+                        if (err) throw err
+                        
+                        if (name in this.pupils) {
+                            $('#status').html('Kánon studenta ' + name + ' byl aktualizován')
+                        } else {
+                            $('#status').html('Student ' + name + ' byl přidán')
+                        }
+                        
+                        console.log(output)
+                        let pupil = new pupil()
+                        
+                        this.pupils.push(pupil)
+
+                        //this.save('pupils', this.pupils)
+                        this.showPupils()
+                    })
                 })
             })
         }

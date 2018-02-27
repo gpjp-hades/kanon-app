@@ -6,3 +6,6 @@ Designed specifically for use with **kanon** web app.
 
 # Start
 `npm start`
+
+# Build
+`npm build`
