@@ -18,6 +18,7 @@ main = new class {
         this.name
         this.kanon = new kanon()
         this.pupils = new pupils(this.kanon)
+        this.used = new used(this.kanon)
 
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
             if (err) throw err
@@ -32,7 +33,9 @@ main = new class {
                 this.showPupils()
             }
 
-            this.used = data.used
+            if (length in data.used) {
+                this.used.fromJSON(data.used)
+            }
         })
 
         Mousetrap.bind(['command+shift+k', 'ctrl+shift+k'], _ => {
@@ -50,9 +53,13 @@ main = new class {
 
     getBook() {
         clearInterval(this.changer)
-        let book = this.books[Math.floor(Math.random()*20)]
-        this.used
-        $('#book').html(book)
+        let book = this.used.getBook(this.pupil)
+        this.save('used', this.used)
+        if (book) {
+            $('#book').html(book.toString())
+        } else {
+            $('#book').html("Všechny knihyjiž byly vybrány")
+        }
     }
 
     endUserMode() {
@@ -66,13 +73,14 @@ main = new class {
     startUserMode() {
         if (!this.userMode) {
             name = $('#pupil').val()
-            if (name in this.pupils) {
-                this.books = this.pupils[name]
-                this.name = name
+            if (this.pupils.has(name)) {
+                this.pupil = this.pupils.get(name)
 
                 this.userMode = true
                 $('#mode').html('Režim uživatele')
                 this.changer = setInterval(this.numberChanger, 200)
+            } else {
+                $('#status').html("Student " + name + " nenalezen")
             }
         }
     }

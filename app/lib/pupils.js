@@ -13,14 +13,20 @@ class pupils {
     }
 
     has(name) {
-        return this.list.filter(e => {
-            e.name == name
-        }).length
+        return this.list.some(e => {
+            return e.name == name
+        })
+    }
+
+    get(name) {
+        return this.list.find(e => {
+            return e.name == name
+        })
     }
 
     fromFile(name, books) {
-        let present = this.list.filter(e => {
-            e.name == name
+        let present = this.list.find(e => {
+            return e.name == name
         })
 
         books = books.map(e => {
@@ -28,11 +34,12 @@ class pupils {
                 return this.kanon.get(e)
         })
 
-        if (present.length) {
-            this.list[present[0].id].books = books
+        if (present) {
+            this.list[present.id].books = books
         } else {
             this.list.push(new pupil(name, books))
         }
+        this.length = this.list.length
     }
 
     fromJSON(data) {
