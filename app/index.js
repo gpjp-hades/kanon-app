@@ -63,12 +63,16 @@ main = new class {
         $('.dice').animate({opacity: 0, width: 0}, 800)
 
         let book = this.used.getBook(this.pupil)
+        
         this.save('used', this.used)
         if (book) {
             $('#book').html(book.toHTML())
         } else {
             $('#book').html("Všechny knihy již byly vylosovány")
         }
+
+        $('#number').html(this.pupil.books.indexOf(book) + 1)
+
         $('#book').delay(1000).animate({opacity: 1}, 800)
     }
 
@@ -139,6 +143,7 @@ main = new class {
     }
 
     showPupils() {
+        $('#pupils').html('<option selected disabled>Zvolte studenta</option>')
         this.pupils.toArray().forEach(name => {
             $('#pupils').append($('<option>', {
                 value: name,
@@ -186,7 +191,9 @@ main = new class {
                     parse(data.substr(data.indexOf("\n")+1), {delimiter: ';'}, (err, output) => {
                         if (err) throw err
                         
-                        if (this.pupils.has(name)) {
+                        if (files.length > 1) {
+                            null
+                        } else if (this.pupils.has(name)) {
                             this.status('Kánon studenta <b>' + name + '</b> byl aktualizován')
                         } else {
                             this.status('Student <b>' + name + '</b> byl přidán')
@@ -199,6 +206,8 @@ main = new class {
                     })
                 })
             })
+            if (files.length > 1)
+                this.status('Studenti byli přidáni')
         }
     }
 }

@@ -33,7 +33,7 @@
 			<div class="row">
 				<div class="col-sm-4 col-sm-offset-1">
 					<select id='pupils' class="form-control" required>
-						<option selected disabled>Zvolte žáka</option>
+						<option selected disabled>Zvolte studenta</option>
 					</select>
 					<br />
 					<button class="btn btn-success" onclick="return main.validate()">Spustit</button>
@@ -41,7 +41,7 @@
 					<br />
 					<label>Dnes vyřazené knihy:</label>
 					<div class="panel panel-default">
-							<div id='used' class="panel-body" style='height: calc(100vh - 247px);'></div>
+							<div id='used' class="panel-body" style='height: calc(100vh - 308px);'></div>
 					</div>
 				</div>
 				<div class="col-sm-5 col-sm-offset-1">
@@ -52,6 +52,12 @@
 				</div>
 			</div>
 		</div>
+
+		<footer class="footer normalMode">
+			<div class="container">
+				<p class="text-muted">Made with ❤️ and Electron</p>
+			</div>
+		</footer>
 
 		<div class="alert alert-info alert-dismissible" style="display: none">
 			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>

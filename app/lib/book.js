@@ -13,7 +13,7 @@ class Book {
     }
 
     toHTML() {
-        return "<small>" + this.author + ":</small><br />" + this.name
+        return "<small>" + this.author + ":</small><br /><span>" + this.name + "</span>"
     }
 
     toJSON(key) {
