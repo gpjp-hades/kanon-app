@@ -13,7 +13,7 @@ const {app, BrowserWindow} = require('electron')
       frame: false,
       minWidth: 768,
       minHeight: 500,
-      title: "Maaturita GPJP"
+      title: "Maturita GPJP"
     })
 
     win.setMenu(null)
@@ -24,7 +24,7 @@ const {app, BrowserWindow} = require('electron')
       slashes: true
     }))
 
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
 
     win.on('closed', () => {
       win = null

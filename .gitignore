@@ -1,5 +1,5 @@
 /node_modules
 /.vscode
 /demo
-/
+/dist
 package-lock.json
