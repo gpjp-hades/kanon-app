@@ -40,6 +40,11 @@ class pupils {
         } else {
             this.list.push(new pupil(name, books))
         }
+
+        this.list.sort((a, b) => {
+            return a.name.localeCompare(b.name)
+        })
+
         this.length = this.list.length
     }
 
