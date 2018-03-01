@@ -72,7 +72,7 @@ main = new class {
         if (book) {
             $('#book').html(book.toHTML())
         } else {
-            $('#book').html("Všechny knihy již byly vylosovány")
+            $('#book').html("<span>Všechny knihy již byly vylosovány</span>")
         }
 
         $('#number').html(this.pupil.books.indexOf(book) + 1)
@@ -92,6 +92,7 @@ main = new class {
 
             $('#book').removeAttr('style')
             $('.dice').removeAttr('style')
+            $('#help').stop().removeAttr('style')
 
             $(".normalMode").css("display", "initial")
             $(".userMode").css("display", "none")
@@ -196,8 +197,12 @@ main = new class {
     
                     parse(data.substr(data.indexOf("\n")+1), {delimiter: ';'}, (err, output) => {
                         if (err) throw err
+
+                        var parsed = output.map(e => {return parseInt(e[0].substring(1))})
                         
-                        if (files.length > 1) {
+                        if (!(parsed instanceof Array) || parsed.length == 0) {
+                            this.status('Soubor ' + file + ' nerozpoznán')
+                        } else if (files.length > 1) {
                             null
                         } else if (this.pupils.has(name)) {
                             this.status('Kánon studenta <b>' + name + '</b> byl aktualizován')
@@ -205,7 +210,7 @@ main = new class {
                             this.status('Student <b>' + name + '</b> byl přidán')
                         }
 
-                        this.pupils.fromFile(name, output.map(e => {return e[0]}))
+                        this.pupils.fromFile(name, parsed)
 
                         this.save('pupils', this.pupils)
                         this.showPupils()
