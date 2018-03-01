@@ -1,6 +1,6 @@
 /node_modules
 /.vscode
 /demo
-/dist
+dist/*
 package-lock.json
-!/dist/main.ico
+!dist/main.ico
