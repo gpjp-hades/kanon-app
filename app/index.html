@@ -55,6 +55,7 @@
 
 		<footer class="footer normalMode">
 			<div class="container">
+				<p class="text-muted pull-left">Autor: Jan Wijnhorst <a href='#' onclick='main.link("https://github.com/keombre")'>@keombre</a></p>
 				<p class="text-muted">Made with ❤️ and Electron</p>
 			</div>
 		</footer>
@@ -68,7 +69,9 @@
 			<span id="number"></span>
 			<button class="btn btn-lg btn-default dice" onclick='main.getBook()'>Vylosovat knihu &nbsp;<kbd>Enter</kbd></button>
 			<div id="book"></div>
+			<div id='help'>Pro ukončení stiskněte <kbd>Ctrl + Shift + K</kbd></div>
 		</div>
+
 		<div id="continue-modal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">

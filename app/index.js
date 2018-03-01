@@ -2,7 +2,7 @@ window.$ = window.jQuery = require('jquery')
 require('bootstrap')
 const fs = require('fs')
 const parse = require('csv-parse')
-const {dialog} = require('electron').remote
+const {dialog, shell} = require('electron').remote
 const BrowserWindow = require('electron').remote.getCurrentWindow()
 const storage = require('electron-json-storage')
 const Mousetrap = require('mousetrap')
@@ -45,6 +45,10 @@ main = new class {
         
     }
 
+    link(href) {
+        shell.openExternal(href)
+    }
+
     close() {
         BrowserWindow.close()
     }
@@ -74,6 +78,8 @@ main = new class {
         $('#number').html(this.pupil.books.indexOf(book) + 1)
 
         $('#book').delay(1000).animate({opacity: 1}, 800)
+
+        $('#help').delay(20 * 1000).animate({opacity: 0.7}, 3000)
     }
 
     endUserMode() {

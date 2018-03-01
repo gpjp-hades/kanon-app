@@ -1,11 +1,13 @@
 # Kánon local app
 Designed specifically for use with **kanon** web app.
 
-# Installation
-`npm install`
-
 # Start
 `npm start`
 
 # Build
-`npm build`
+`npm run build`
+
+# Options
+`full`    - enables fullscreen mode
+`dev`     - opens Dev tools ♥
+`clearDB` - clear database (Warning! List of all used books will be lost!)
