@@ -39,7 +39,10 @@
     },
     "linux": {
       "target": "AppImage",
-      "icon": "dist/main.ico"
+      "icon": "dist/main.png"
+    },
+    "appImage":{
+      "systemIntegration": "doNotAsk"
     }
   }
 }
