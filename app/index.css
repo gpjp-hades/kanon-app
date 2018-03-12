@@ -38,9 +38,11 @@ nav .navbar-header {
     top: calc(50% - 34px);
     right: calc(50% - 307px);
     font-size: 30px;
+    z-index: 2;
 }
 #book {
     opacity: 0;
+    z-index: -1;
 }
 #book span {
     position: absolute;

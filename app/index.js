@@ -19,6 +19,7 @@ main = new class {
         this.kanon = new kanon()
         this.pupils = new pupils(this.kanon)
         this.used = new used(this.kanon)
+        this.gotBook = false
 
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
             if (err) throw err
@@ -62,29 +63,36 @@ main = new class {
     }
 
     getBook() {
-        clearInterval(this.changer)
-        Mousetrap.unbind('enter')
-        $('.dice').animate({opacity: 0, width: 0}, 800)
+        if (!this.gotBook) {
+            clearInterval(this.changer)
 
-        let book = this.used.getBook(this.pupil)
-        
-        this.save('used', this.used)
-        if (book) {
-            $('#book').html(book.toHTML())
-        } else {
-            $('#book').html("<span>Všechny knihy již byly vylosovány</span>")
+            Mousetrap.unbind('enter')
+
+            this.gotBook = true
+
+            $('.dice').animate({opacity: 0, width: 0}, 800)
+
+            let book = this.used.getBook(this.pupil)
+            
+            this.save('used', this.used)
+            if (book) {
+                $('#book').html(book.toHTML())
+            } else {
+                $('#book').html("<span>Všechny knihy již byly vylosovány</span>")
+            }
+
+            $('#number').html(this.pupil.books.indexOf(book) + 1)
+
+            $('#book').delay(1000).animate({opacity: 1}, 800)
+
+            $('#help').delay(20 * 1000).animate({opacity: 0.7}, 3000)
         }
-
-        $('#number').html(this.pupil.books.indexOf(book) + 1)
-
-        $('#book').delay(1000).animate({opacity: 1}, 800)
-
-        $('#help').delay(20 * 1000).animate({opacity: 0.7}, 3000)
     }
 
     endUserMode() {
         if (this.userMode) {
             this.userMode = false
+            this.gotBook = false
 
             Mousetrap.unbind('enter')
 
@@ -116,6 +124,7 @@ main = new class {
 
                 $(".normalMode").css("display", "none")
                 $(".userMode").css("display", "initial")
+                $('#help').stop().clearQueue().removeAttr('style')
 
                 this.changer = setInterval(this.numberChanger, 200)
             } else {
