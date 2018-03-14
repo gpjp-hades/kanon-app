@@ -88,11 +88,11 @@ main = new class {
             this.save('used', this.used)
             if (book) {
                 $('#book').html(book.toHTML())
+                $('#number').html(this.pupil.books.indexOf(book) + 1)
             } else {
                 $('#book').html("<span>Všechny knihy již byly vylosovány</span>")
+                $('#number').html("")
             }
-
-            $('#number').html(this.pupil.books.indexOf(book) + 1)
 
             $('#book').delay(1000).animate({opacity: 1}, 800)
 

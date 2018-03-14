@@ -9,6 +9,9 @@ body {
     overflow: hidden;
     cursor: default;
 }
+a {
+    -webkit-user-drag: none;
+}
 nav {
     -webkit-app-region: drag;
 }
