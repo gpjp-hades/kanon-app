@@ -20,6 +20,16 @@ main = new class {
         this.pupils = new pupils(this.kanon)
         this.used = new used(this.kanon)
         this.gotBook = false
+        this.shouldClose = false
+
+        window.addEventListener('beforeunload', (e) => {
+            if (!this.shouldClose) {
+                if (!this.userMode)
+                    $("#close-modal").modal("show");
+                
+                e.returnValue = false
+            }
+        })
 
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
             if (err) throw err
@@ -51,6 +61,7 @@ main = new class {
     }
 
     close() {
+        this.shouldClose = true
         BrowserWindow.close()
     }
 

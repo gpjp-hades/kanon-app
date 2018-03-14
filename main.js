@@ -5,8 +5,9 @@ const url = require('url')
 
 let win
 
+
 if (process.argv.includes('help')) {
-	console.log(`Maturita GPJP
+	process.stdout.write(`Maturita GPJP
 
 Arguments:
 
