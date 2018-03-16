@@ -7,6 +7,9 @@ Designed specifically for use with **kanon** web app.
 # Build
 `npm run build`
 
+# Deploy
+`npm run deploy`
+
 # Options
  - `full`    - enables fullscreen mode
  - `dev`     - opens Dev tools ♥

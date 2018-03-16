@@ -1,9 +1,12 @@
 /node_modules
+
 release/*
 !release/main.ico
 !release/main.png
+
+__tests__/*
+/TEST-jest*
+dist/*
+
 npm-debug.log*
 package-lock.json
-/__tests__
-/TEST-jest*
-/dist

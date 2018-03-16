@@ -42,7 +42,7 @@
     "pretest": "webpack --config webpack.tests.config.js",
     "test": "jest",
     "build": "webpack --config webpack.config.js",
-    "publish": "electron-builder",
+    "deploy": "electron-builder",
     "prestart": "npm run build",
     "start": "electron ."
   },
@@ -68,11 +68,11 @@
     "appId": "cz.gpjp.kanon",
     "win": {
       "target": "portable",
-      "icon": "dist/main.ico"
+      "icon": "release/main.ico"
     },
     "linux": {
       "target": "AppImage",
-      "icon": "dist/main.png"
+      "icon": "release/main.png"
     },
     "appImage": {
       "systemIntegration": "doNotAsk"
