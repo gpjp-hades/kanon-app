@@ -1,8 +1,9 @@
 /node_modules
-/.vscode
-/demo
-dist/*
+release/*
+!release/main.ico
+!release/main.png
+npm-debug.log*
 package-lock.json
-!dist/main.ico
-!dist/main.png
-npm-debug.log.*
+/__tests__
+/TEST-jest*
+/dist
