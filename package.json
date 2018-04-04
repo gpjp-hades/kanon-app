@@ -41,7 +41,7 @@
       "target": "AppImage",
       "icon": "dist/main.png"
     },
-    "appImage":{
+    "appImage": {
       "systemIntegration": "doNotAsk"
     }
   }

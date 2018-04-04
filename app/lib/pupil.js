@@ -2,8 +2,9 @@
 const Book = require('./book.js')
 
 class pupil {
-    constructor(name, books = []) {
+    constructor(name, books = [], clas = null) {
         this.name = name
+        this.class = clas
         if (books instanceof Array)
             this.books = books
 
@@ -17,7 +18,7 @@ class pupil {
     }
 
     toJSON() {
-        return {"name": this.name, "books": this.books.map(e => {return e.id})}
+        return {"name": this.name, "books": this.books.map(e => {return e.id}), "class": this.class}
     }
 }
 

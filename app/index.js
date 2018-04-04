@@ -171,10 +171,23 @@ main = new class {
 
     showPupils() {
         $('#pupils').html('<option selected disabled>Zvolte studenta</option>')
-        this.pupils.toArray().forEach(name => {
-            $('#pupils').append($('<option>', {
-                value: name,
-                text: name
+        this.pupils.toArray().sort((a, b) => (
+            a.class > b.class
+        )).forEach(pupil => {
+            if (!$('#pupils').has('optgroup.' + (pupil.class?pupil.class:"noclass")).length) {
+                $('#pupils').append($('<optgroup>', {
+                    class: (pupil.class?pupil.class:"noclass"),
+                    label: {
+                        "a": "Oktáva A",
+                        "b": "Oktáva B",
+                        "c": "4. C",
+                        "noclass": "Neznámá třída"
+                    }[pupil.class?pupil.class:"noclass"]
+                }))
+            }
+            $('optgroup.' + (pupil.class?pupil.class:"noclass")).append($('<option>', {
+                value: pupil.name,
+                text: pupil.name
             }))
         })
     }
@@ -230,7 +243,7 @@ main = new class {
                             this.status('Student <b>' + name + '</b> byl přidán')
                         }
 
-                        this.pupils.fromFile(name, parsed)
+                        this.pupils.fromFile(name, parsed, file)
 
                         this.save('pupils', this.pupils)
                         this.showPupils()
