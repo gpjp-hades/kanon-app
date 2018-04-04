@@ -202,7 +202,7 @@ main = new class {
                 fs.readFile(file, 'utf8', (err, data) => {
                     if (err) throw err
                     
-                    let name = data.substr(0, data.indexOf("\n")-1)
+                    let name = data.substr(0, data.indexOf("\n")).replace("\r", "")
     
                     parse(data.substr(data.indexOf("\n")+1), {delimiter: ';'}, (err, output) => {
                         if (err) throw err
