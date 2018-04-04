@@ -5,3 +5,4 @@ dist/*
 package-lock.json
 !dist/main.ico
 !dist/main.png
+npm-debug.log.*

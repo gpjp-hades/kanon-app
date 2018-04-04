@@ -5,8 +5,9 @@ const url = require('url')
 
 let win
 
+
 if (process.argv.includes('help')) {
-	console.log(`Maturita GPJP
+	process.stdout.write(`Maturita GPJP
 
 Arguments:
 
@@ -50,6 +51,20 @@ function createWindow () {
 	win.on('closed', () => {
 		win = null
 	})
+}
+
+// Enforce single app instance
+var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+	// Someone tried to run a second instance, we should focus our window.
+	if (win) {
+	  if (win.isMinimized()) win.restore();
+	  win.focus();
+	}
+  });
+  
+  if (shouldQuit) {
+	app.quit();
+	return;
 }
 
 app.on('ready', createWindow)
