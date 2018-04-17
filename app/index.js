@@ -22,14 +22,16 @@ main = new class {
         this.gotBook = false
         this.shouldClose = false
 
-        window.addEventListener('beforeunload', (e) => {
+
+        /*window.addEventListener('beforeunload', (e) => {
             if (!this.shouldClose) {
                 if (!this.userMode)
-                    $("#close-modal").modal("show");
+                    $("#close-modal").modal("show")
                 
                 e.returnValue = false
             }
         })
+        //*/
         
 
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
@@ -164,9 +166,18 @@ main = new class {
         $("#used").html(this.used.toHTML())
 
         $("#used option").dblclick((e) => {
-            this.used.removeBook(e.target.getAttribute('value'))
-            this.save('used', this.used)
-            this.showUsed()
+
+            let index = e.target.getAttribute('value')
+            $("#change-modal .modal-title").html("Chcete knihu odebrat z vyřazených?")
+            $("#bookChange").html(this.kanon.books[index].toString() + " bude znovu zařazena do losování.")
+            $("#bookChangeContinue").click(_ => {
+                this.used.removeBook(index)
+                this.save('used', this.used)
+                this.showUsed()
+                $("#change-modal").modal("hide")
+                $("#bookChangeContinue").off("click")
+            })
+            $("#change-modal").modal("show")
         })
     }
 
@@ -177,9 +188,17 @@ main = new class {
         $('#books').html(this.kanon.toHTML())
 
         $("#books option").dblclick((e) => {
-            this.used.addBook(e.target.getAttribute('value'))
-            this.save('used', this.used)
-            this.showUsed()
+            let index = e.target.getAttribute('value')
+            $("#change-modal .modal-title").html("Chcete knihu vyřadit?")
+            $("#bookChange").html(this.kanon.books[index].toString() + " bude přidána mezi vyřazené knihy")
+            $("#bookChangeContinue").click(_ => {
+                this.used.addBook(index)
+                this.save('used', this.used)
+                this.showUsed()
+                $("#change-modal").modal("hide")
+                $("#bookChangeContinue").off("click")
+            })
+            $("#change-modal").modal("show")
         })
 
     }
