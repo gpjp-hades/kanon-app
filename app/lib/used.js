@@ -25,8 +25,22 @@ class used {
 
     toHTML() {
         return this.list[this.date.getDate()].map(e => {
-            return this.kanon.get(e).toString()
-        }).join("<br />")
+            return "<option value='" + e + "'>" + this.kanon.get(e).toString() + "</option>"
+        }).join("\n")
+    }
+
+    addBook(id) {
+        let array = this.list[this.date.getDate()]
+        if (!array.includes(id))
+            array.push(id)
+    }
+
+    removeBook(id) {
+        let array = this.list[this.date.getDate()]
+        if (array.includes(id)) {
+            let index = array.indexOf(id)
+            array.splice(index, 1)
+        }
     }
 
     getBook(arg) {
@@ -39,7 +53,6 @@ class used {
         
         if (!selectable.length)
             return false
-        
         
         let book = selectable[Math.floor(Math.random()*selectable.length)]
         this.list[this.date.getDate()].push(book.id)

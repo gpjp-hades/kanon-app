@@ -30,6 +30,7 @@ main = new class {
                 e.returnValue = false
             }
         })
+        
 
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
             if (err) throw err
@@ -161,12 +162,26 @@ main = new class {
 
     showUsed() {
         $("#used").html(this.used.toHTML())
+
+        $("#used option").dblclick((e) => {
+            this.used.removeBook(e.target.getAttribute('value'))
+            this.save('used', this.used)
+            this.showUsed()
+        })
     }
 
     showBooks() {
+
         $('#loadKanon').html('Aktualizovat kánon')
         $('#loadPupil').removeAttr('class')
-        $('#books').html(this.kanon.toString())
+        $('#books').html(this.kanon.toHTML())
+
+        $("#books option").dblclick((e) => {
+            this.used.addBook(e.target.getAttribute('value'))
+            this.save('used', this.used)
+            this.showUsed()
+        })
+
     }
 
     showPupils() {

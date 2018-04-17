@@ -39,6 +39,14 @@ class kanon {
         return this.books.reduce((ret, e) => {if (e) ret.push(e.toString()); return ret}, []).join("<br />\n")
     }
 
+    toHTML() {
+        return this.books.reduce((ret, e) => {
+            if (e)
+                ret.push("<option value='" + e.id + "'>" + e.toString() + "</option>")
+            return ret
+        }, []).join("\n")
+    }
+
 }
 
 module.exports = kanon
