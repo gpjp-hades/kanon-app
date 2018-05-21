@@ -21,6 +21,17 @@ nav div, ul {
 nav .navbar-header {
     -webkit-app-region: drag;
 }
+#pupilName {
+    position: absolute;
+    font-size: 22px;
+    left: 2.5%;
+    top: 61px;
+    width: calc(100vw - 5%);
+    z-index: -1;
+    text-align: center;
+    border-bottom: thin solid #d0d0d0;
+    padding-bottom: 5px;
+}
 #number {
     position: absolute;
     bottom: calc(50% - 100px);

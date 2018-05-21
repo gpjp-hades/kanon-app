@@ -23,7 +23,7 @@ main = new class {
         this.shouldClose = false
 
 
-        /*window.addEventListener('beforeunload', (e) => {
+        window.addEventListener('beforeunload', (e) => {
             if (!this.shouldClose) {
                 if (!this.userMode)
                     $("#close-modal").modal("show")
@@ -31,7 +31,6 @@ main = new class {
                 e.returnValue = false
             }
         })
-        //*/
         
 
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
@@ -73,7 +72,7 @@ main = new class {
     }
 
     numberChanger() {
-        $('#number').html(Math.floor(Math.random()*20)+1)
+        $('#number').html(Math.floor(Math.random()*main.kanon.length)+1)
     }
 
     getBook() {
@@ -91,7 +90,7 @@ main = new class {
             this.save('used', this.used)
             if (book) {
                 $('#book').html(book.toHTML())
-                $('#number').html(this.pupil.books.indexOf(book) + 1)
+                $('#number').html(parseInt(book.id))
             } else {
                 $('#book').html("<span>Všechny knihy již byly vylosovány</span>")
                 $('#number').html("")
@@ -136,6 +135,7 @@ main = new class {
 
                 this.userMode = true
 
+                $("#pupilName").html(this.pupil.name)
                 $(".normalMode").css("display", "none")
                 $(".userMode").css("display", "initial")
                 $('#help').stop().clearQueue().removeAttr('style')
