@@ -13,7 +13,11 @@ class Book {
     }
 
     toHTML() {
-        return "<small>" + this.author + ":</small><br /><span>" + this.name + "</span>"
+        if (typeof this.author == 'string' && this.author.length > 0) {
+            return "<small>" + this.author + ":</small><br /><span>" + this.name + "</span>"
+        } else {
+            return "<span>" + this.name + "</span>"
+        }
     }
 
     toJSON(key) {

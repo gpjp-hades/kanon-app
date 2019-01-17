@@ -135,6 +135,8 @@ main = new class {
 
                 this.userMode = true
 
+                $('.dice').removeAttr('style').stop()
+                $('#book').html('').removeAttr('style').stop()
                 $("#pupilName").html(this.pupil.name)
                 $(".normalMode").css("display", "none")
                 $(".userMode").css("display", "initial")
