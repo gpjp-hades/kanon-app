@@ -108,3 +108,49 @@ nav .navbar-header {
     width: 300px;
     opacity: 0;
 }
+
+.overlay {
+    z-index: 10;
+    position: absolute;
+    top: 51px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 51px);
+    display: none;
+    background-color: #fff;
+}
+
+.server-overlay h2 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.server-overlay #server-ips {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 38px;
+    width: 100%;
+    text-align: center;
+    margin-top: 36px;
+}
+
+.client-overlay h2 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.client-overlay .client-input {
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 40px;
+}
+
+.client-overlay .client-input input[type="text"] {
+    text-align: center;
+}
+
+.client-overlay .client-input #client-connect-error {
+    text-align: center;
+    margin-top: 25px;
+    color: #c62828;
+}

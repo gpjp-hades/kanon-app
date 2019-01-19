@@ -3,6 +3,7 @@ require('bootstrap')
 const fs = require('fs')
 const parse = require('csv-parse')
 const {dialog, shell} = require('electron').remote
+const { ipcRenderer } = require('electron')
 const BrowserWindow = require('electron').remote.getCurrentWindow()
 const storage = require('electron-json-storage')
 const Mousetrap = require('mousetrap')
@@ -21,17 +22,27 @@ main = new class {
         this.used = new used(this.kanon)
         this.gotBook = false
         this.shouldClose = false
+        this.mode = ipcRenderer.sendSync('process-type')
 
-
-        window.addEventListener('beforeunload', (e) => {
+        /*window.addEventListener('beforeunload', (e) => {
             if (!this.shouldClose) {
                 if (!this.userMode)
                     $("#close-modal").modal("show")
                 
                 e.returnValue = false
             }
+        })*/
+
+        window.addEventListener('load', (e) => {
+            if (this.mode == 'server') {
+                $('#processtype').html(' (Server)')
+                $('.server-overlay').css('display', 'block')
+                $('#server-ips').html(Object.values(this.getLocalIPs()).join('<br />'))
+            } else if (this.mode == 'client') {
+                $('#processtype').html(' (Klient)')
+                $('.client-overlay').css('display', 'block')
+            }
         })
-        
 
         storage.getMany(['kanon', 'pupils', 'used'], (err, data) => {
             if (err) throw err
@@ -55,7 +66,114 @@ main = new class {
         Mousetrap.bind(['command+shift+k', 'ctrl+shift+k'], _ => {
             this.endUserMode()
         })
+
+        if (this.mode == 'server') {
+            let net = require('net')
+            console.log('creating server')
+
+            this.server = net.createServer(socket => {
+                socket.write('kanon-app API');
+                
+                socket.setEncoding("utf8")
+                socket.on('data', data => {
+                    console.log(data)
+                    if (data.toString() == 'kanon-app API request') {
+
+                        $('.server-overlay').removeAttr('style')
+                        socket.write('kanon-app API response')
+                        
+                    }
+                })
+            })
+
+            this.server.listen(46200, '127.0.0.1')
+        }
         
+    }
+
+    createClient() {
+        $('#client-connect-error').html('')
+        let ip = $('#client-ip').val()
+        if (!this.validateIP(ip)) {
+            $('#client-connect-error').html('Chybný formát IP adresy')
+        }
+        
+        let net = require('net');
+        this.client = new net.Socket();
+
+        this.client.connect(46200, ip, () => {
+            this.client.setEncoding("utf8")
+        })
+
+        this.client.on('data', data => {
+            console.log(data)
+            if (data.toString() == 'kanon-app API') {
+
+                $('#client-connect-error').html('Spojení navázáno')
+                this.client.write('kanon-app API request')
+
+            } else if (data.toString() == 'kanon-app API response') {
+
+                $('.client-overlay').removeAttr('style')
+                this.client.setTimeout(0);
+
+            }
+        })
+
+        this.client.setTimeout(3000, () => {
+            $('#client-connect-error').html('Server neodpověděl')
+        })
+    }
+
+    /*setupClient() {
+        let net = require('net');
+        let client = new net.Socket();
+
+        client.connect(46200, '127.0.0.1', function() {
+            process.stdout.write('Connected')
+            client.write('Hello, server! Love, Client.')
+        })
+
+        client.on('data', function(data) {
+            process.stdout.write('Received: ' + data)
+        })
+
+        client.on('close', function() {
+            process.stdout.write('Connection closed')
+            client.destroy()
+        })
+    }*/
+
+    validateIP(ipaddress) {  
+        if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {
+          return true
+        } 
+        return false
+    }
+
+    getLocalIPs() {
+        let os = require('os');
+        let ifaces = os.networkInterfaces();
+        
+        let ips = []
+        
+        Object.keys(ifaces).forEach(ifname => {
+            var alias = 0
+
+            ifaces[ifname].forEach(iface => {
+                if ('IPv4' !== iface.family || iface.internal !== false) {
+                    return;
+                }
+
+                if (alias >= 1) {
+                    ips[ifname + ':' + alias] = iface.address
+                } else {
+                    ips[ifname] = iface.address
+                }
+                ++alias
+            })
+        })
+        return ips
     }
 
     link(href) {

@@ -10,7 +10,9 @@
 	<body>
 		<nav class="navbar navbar-inverse navbar-static-top">
 			<div class="navbar-header">
-				<span class="navbar-brand" style="color: #fff">Maturita GPJP <small> - Volba knihy</small></span>
+				<span class="navbar-brand" style="color: #fff">
+					Maturita GPJP <small> - Volba knihy<span id="processtype"></span></small>
+				</span>
 			</div>
 			<ul class="normalMode nav navbar-nav navbar-right">
 				<li class="dropdown">
@@ -29,6 +31,18 @@
 				<li style="margin-right: 25px"><button class="btn btn-xs btn-danger navbar-btn pull-right" data-toggle="modal" data-target="#close-modal">&times;</button></li>
 			</ul>
 		</nav>
+		<div class="server-overlay overlay">
+			<h2>IP adresy serveru</h2>
+			<div id="server-ips"></div>
+		</div>
+		<div class="client-overlay overlay">
+			<h2>Zadejte IP adresu serveru</h2>
+			<div class="client-input">
+				<input class="form-control" type="text" id="client-ip"></input><br />
+				<input class="form-control" type="submit" value="Připojit" onclick="main.createClient()"></input>
+				<div id="client-connect-error"></div>
+			</div>
+		</div>
 		<div class="normalMode container">
 			<div class="row">
 				<div class="col-sm-4 col-sm-offset-1">

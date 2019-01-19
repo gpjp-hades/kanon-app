@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const storage = require('electron-json-storage')
 const path = require('path')
 const url = require('url')
@@ -10,9 +10,11 @@ if (process.argv.includes('help')) {
 
 Arguments:
 
-  full    - enable fullscreen
-  dev     - enable dev tools
-  clearDB - clear database (Warning! List of all used books will be lost!)
+  full        - enable fullscreen
+  dev         - enable dev tools
+  clearDB     - clear database (Warning! List of all used books will be lost!)
+  server      - enable server mode
+  client [IP] - enable client mode
 	`)
 	app.exit()
 }
@@ -52,6 +54,7 @@ function createWindow () {
 	})
 }
 
+/*
 // Enforce single app instance
 var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
 	// Someone tried to run a second instance, we should focus our window.
@@ -65,7 +68,16 @@ var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) 
 if (shouldQuit) {
 	app.quit()
 	return
-}
+}*/
+
+let mode = 'default'
+
+if (process.argv.includes('server')) { mode = 'server' }
+else if (process.argv.includes('client')) { mode = 'client' }
+
+ipcMain.on('process-type', (event, arg) => {
+	event.returnValue = mode
+})
 
 app.on('ready', createWindow)
 
