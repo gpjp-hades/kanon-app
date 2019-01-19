@@ -8,6 +8,7 @@ const BrowserWindow = require('electron').remote.getCurrentWindow()
 const storage = require('electron-json-storage')
 const Mousetrap = require('mousetrap')
 const {kanon, pupils, used} = require('./lib')
+const Crypto = require('crypto-js')
 
 main = new class {
 
@@ -67,36 +68,70 @@ main = new class {
             this.endUserMode()
         })
 
+        let clientCount = 0
+
         if (this.mode == 'server') {
             let net = require('net')
-            console.log('creating server')
 
             this.server = net.createServer(socket => {
-                socket.write('kanon-app API');
+                if (clientCount >= 1) {
+                    socket.write('TM')
+                    socket.destroy()
+                }
+                clientCount = 1
+
+                socket.write('KP');
                 
                 socket.setEncoding("utf8")
                 socket.on('data', data => {
                     console.log(data)
-                    if (data.toString() == 'kanon-app API request') {
+                    switch (data.toString().substr(0, 2)) {
+                        case 'SC':
+                            let message = data.toString().substr(2)
+                            if (message.length != 32) {
+                                clientCount = 0
+                                socket.destroy()
+                                return
+                            }
+                            socket.write('SR' + Crypto.MD5(message).toString())
 
-                        $('.server-overlay').removeAttr('style')
-                        socket.write('kanon-app API response')
-                        
+                            break;
+                        case 'RN':
+                            $('.server-overlay').removeAttr('style')
+
+                            break;
+                        default:
+                            socket.destroy()
+                            clientCount = 0
+                            break;
                     }
+                })
+
+                socket.on('error', e => {
+                    clientCount = 0
+                    console.log('socket error', e)
+                })
+
+                socket.on('close', () => {
+                    clientCount = 0
                 })
             })
 
             this.server.listen(46200, '127.0.0.1')
         }
-        
     }
 
     createClient() {
+
         $('#client-connect-error').html('')
         let ip = $('#client-ip').val()
         if (!this.validateIP(ip)) {
             $('#client-connect-error').html('Chybný formát IP adresy')
+            return
         }
+
+        if (typeof this.client == 'object' && !this.client.destroyed)
+            return
         
         let net = require('net');
         this.client = new net.Socket();
@@ -105,18 +140,66 @@ main = new class {
             this.client.setEncoding("utf8")
         })
 
+        let secret = Crypto.MD5(Math.random().toString(36).replace(/[^a-z]+/g, '')).toString()
+        let state = 0;
+
         this.client.on('data', data => {
             console.log(data)
-            if (data.toString() == 'kanon-app API') {
+            switch (data.toString().substr(0, 2)) {
+                case 'TM':
+                    if (state != 0) return
+                    
+                    $('#client-connect-error').html('K serveru je připojen jiný klient')
+                    this.client.destroy()
+                    
+                    break;
+                case 'KP':
+                    if (state != 0) {
+                        $('#client-connect-error').html('Chyba serveru')
+                        this.client.destroy()
+                        return
+                    }
+                    $('#client-connect-error').html('Spojení navázáno')
 
-                $('#client-connect-error').html('Spojení navázáno')
-                this.client.write('kanon-app API request')
+                    this.client.write('SC' + secret)
 
-            } else if (data.toString() == 'kanon-app API response') {
+                    state = 1;
 
-                $('.client-overlay').removeAttr('style')
-                this.client.setTimeout(0);
+                    break;
+                case 'SR':
+                    let message = data.toString().substr(2)
+                    if (
+                        state != 1 ||
+                        message.length != 32 ||
+                        message != Crypto.MD5(secret).toString()
+                    ) {
+                        $('#client-connect-error').html('Chyba serveru')
+                        this.client.destroy()
+                        return
+                    }
 
+                    $('.client-overlay').removeAttr('style')
+
+                    this.client.write('RN')
+                    this.client.setTimeout(0);
+
+                    state = 2;
+                    break;
+
+            }
+        })
+
+        /*this.client.on('close', function() {
+            this.client.destroy()
+        })*/
+
+        this.client.on('error', e => {
+            switch (e.code) {
+                case 'ECONNREFUSED':
+                    $('#client-connect-error').html('Server odmítl připojení')
+                    break;
+                default:
+                    console.log(e)
             }
         })
 
@@ -124,25 +207,6 @@ main = new class {
             $('#client-connect-error').html('Server neodpověděl')
         })
     }
-
-    /*setupClient() {
-        let net = require('net');
-        let client = new net.Socket();
-
-        client.connect(46200, '127.0.0.1', function() {
-            process.stdout.write('Connected')
-            client.write('Hello, server! Love, Client.')
-        })
-
-        client.on('data', function(data) {
-            process.stdout.write('Received: ' + data)
-        })
-
-        client.on('close', function() {
-            process.stdout.write('Connection closed')
-            client.destroy()
-        })
-    }*/
 
     validateIP(ipaddress) {  
         if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {
