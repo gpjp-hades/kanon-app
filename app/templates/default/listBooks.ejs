@@ -1,0 +1,33 @@
+<%- include('../layout/navbar') -%>
+
+<style>
+
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-1">
+            <select id='pupils' class="form-control" required>
+                <option selected disabled>Zvolte studenta</option>
+            </select>
+            <br />
+            <button class="btn btn-success" onclick="return main.validate()">Spustit</button>
+            <br />
+            <br />
+            <label>Dnes vyřazené knihy:</label>
+            <select multiple class="form-control" id='used' style='height: calc(100vh - 308px);'></select>
+            <span>Pro přesun knihy <b>dvakrát klikněte</b></span>
+        </div>
+        <div class="col-sm-5 col-sm-offset-1">
+            <label>Kánon:</label>
+            <select multiple class="form-control" id='books' style='height: calc(100vh - 200px);'></select>
+        </div>
+    </div>
+</div>
+
+<%- include('../layout/footer') -%>
+
+<div class="alert alert-info alert-dismissible" style="display: none">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <span id='status'></span>
+</div>

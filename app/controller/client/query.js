@@ -16,7 +16,7 @@ class query extends controller {
         if (!this.validateIP(ip))
             return this.message('Chybný formát IP adresy')
         
-        console.log('ip')
+        this.container.remoteClient.connect(ip, console.log, console.log)
     }
 
     message(text) {

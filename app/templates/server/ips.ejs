@@ -1,0 +1,21 @@
+<%- include('../layout/navbar', {type: 'Server'}); -%>
+<style>
+h2 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+#server-ips {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 38px;
+    width: 100%;
+    text-align: center;
+    margin-top: 36px;
+}
+</style>
+
+<h2>IP adresy serveru</h2>
+<div id="server-ips">
+<%- Object.values(ips).join('<br />\n') -%>
+</div>
