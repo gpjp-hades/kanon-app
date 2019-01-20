@@ -73,12 +73,14 @@ main = new class {
         if (this.mode == 'server') {
             let net = require('net')
 
-            this.server = net.createServer(socket => {
+            let server = net.createServer(socket => {
                 if (clientCount >= 1) {
                     socket.write('TM')
                     socket.destroy()
                 }
                 clientCount = 1
+
+                this.socket = socket
 
                 socket.write('KP');
                 
@@ -98,7 +100,7 @@ main = new class {
                             break;
                         case 'RN':
                             $('.server-overlay').removeAttr('style')
-
+                            
                             break;
                         default:
                             socket.destroy()
@@ -117,8 +119,19 @@ main = new class {
                 })
             })
 
-            this.server.listen(46200, '127.0.0.1')
+            server.listen(46200, '127.0.0.1')
         }
+    }
+
+    // resolve buffers if offline/no client
+    serverSend(type, message) {
+        if (this.mode != 'server') return false;
+        this.socket.write(type + message);
+    }
+
+    clientSend(type, message) {
+        if (this.mode != 'client') return false;
+        this.client.write(type + message);
     }
 
     createClient() {
@@ -145,6 +158,9 @@ main = new class {
 
         this.client.on('data', data => {
             console.log(data)
+            
+            let message = data.toString().substr(2)
+
             switch (data.toString().substr(0, 2)) {
                 case 'TM':
                     if (state != 0) return
@@ -167,7 +183,7 @@ main = new class {
 
                     break;
                 case 'SR':
-                    let message = data.toString().substr(2)
+                    
                     if (
                         state != 1 ||
                         message.length != 32 ||
@@ -178,20 +194,24 @@ main = new class {
                         return
                     }
 
-                    $('.client-overlay').removeAttr('style')
+                    $('.client-overlay').html('<h2>Čekám na výběr studenta</h2>')
 
                     this.client.write('RN')
                     this.client.setTimeout(0);
 
                     state = 2;
-                    break;
 
+                    break;
+                case 'BK':
+                    if (state != 2) {
+                        $('#client-connect-error').html('Chyba serveru')
+                        this.client.destroy()
+                        return
+                    }
+
+                    console.log(message)
             }
         })
-
-        /*this.client.on('close', function() {
-            this.client.destroy()
-        })*/
 
         this.client.on('error', e => {
             switch (e.code) {
@@ -267,9 +287,8 @@ main = new class {
 
             $('.dice').animate({opacity: 0, width: 0}, 800)
 
-            let book = this.used.getBook(this.pupil)
+            let book = this.drawBook()
             
-            this.save('used', this.used)
             if (book) {
                 $('#book').html(book.toHTML())
                 $('#number').html(parseInt(book.id))
@@ -282,6 +301,12 @@ main = new class {
 
             $('#help').delay(20 * 1000).animate({opacity: 0.7}, 3000)
         }
+    }
+
+    drawBook() {
+        let book = this.used.getBook(this.pupil)
+        this.save('used', this.used)
+        return book
     }
 
     endUserMode() {
@@ -305,29 +330,47 @@ main = new class {
     }
 
     startUserMode() {
-        if (!this.userMode) {
-            name = $('#pupils').val()
-            if (this.pupils.has(name)) {
+        if (this.userMode)
+            return
+        
+        name = $('#pupils').val()
+        if (!this.pupils.has(name)) {
+            this.status("Student " + name + " nenalezen")
+            return
+        }
 
-                Mousetrap.bind('enter', _ => {
-                    this.getBook()
-                })
+        this.pupil = this.pupils.get(name)
+        this.userMode = true
 
-                this.pupil = this.pupils.get(name)
-
-                this.userMode = true
-
-                $('.dice').removeAttr('style').stop()
-                $('#book').html('').removeAttr('style').stop()
-                $("#pupilName").html(this.pupil.name)
-                $(".normalMode").css("display", "none")
-                $(".userMode").css("display", "initial")
-                $('#help').stop().clearQueue().removeAttr('style')
-
-                this.changer = setInterval(this.numberChanger, 200)
-            } else {
-                this.status("Student " + name + " nenalezen")
+        if (this.mode == 'server') {
+            if (!this.socket.writable) {
+                this.status("Spojení s klientem ztaceno")
+                return
             }
+            let book = this.drawBook()
+            // draw book and send it to client
+            if (book) {
+                this.socket.write('DR' + name + '\n' + book.toJSON())
+                this.status("Student vylosuje knihu " + book.toHTML())
+            } else {
+                this.socket.write('DR' + name + '\n' + 'blank')
+                this.status("Všechny knihy již byly vylosovány")
+            }
+            
+
+        } else if (this.mode == 'default') {
+            Mousetrap.bind('enter', _ => {
+                this.getBook()
+            })
+
+            $('.dice').removeAttr('style').stop()
+            $('#book').html('').removeAttr('style').stop()
+            $("#pupilName").html(this.pupil.name)
+            $(".normalMode").css("display", "none")
+            $(".userMode").css("display", "initial")
+            $('#help').stop().clearQueue().removeAttr('style')
+
+            this.changer = setInterval(this.numberChanger, 200)
         }
     }
 
