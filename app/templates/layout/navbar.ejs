@@ -1,0 +1,38 @@
+<style>
+nav {
+    -webkit-app-region: drag;
+}
+nav div, ul {
+    -webkit-app-region: no-drag;
+}
+nav .navbar-header {
+    -webkit-app-region: drag;
+}
+</style>
+
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="navbar-header">
+        <span class="navbar-brand" style="color: #fff">
+            Maturita GPJP <small> - Volba knihy</small>
+            <% if (typeof name == 'string' && name.length > 0) { %>
+                <%- '<small> (' + name + ')</small>' -%>
+            <% } %>
+        </span>
+    </div>
+    <ul class="normalMode nav navbar-nav navbar-right">
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Možnosti
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="#" id='loadKanon' onclick="main.loadKanon()">Načíst kánon</a>
+                </li>
+                <li class="disabled" id='loadPupil'>
+                    <a href="#" onclick="main.loadPupil()">Načíst studenty</a>
+                </li>
+            </ul>
+        </li>
+        <li style="margin-right: 7px"><button class="btn btn-xs btn-info navbar-btn pull-right" onclick="main.mini()">_</button></li>
+        <li style="margin-right: 25px"><button class="btn btn-xs btn-danger navbar-btn pull-right" data-toggle="modal" data-target="#close-modal">&times;</button></li>
+    </ul>
+</nav>

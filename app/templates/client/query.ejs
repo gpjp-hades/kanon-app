@@ -1,0 +1,30 @@
+<%- include('../layout/navbar', {name: 'Klient'}); -%>
+<style>
+h2 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.client-input {
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 40px;
+}
+
+.client-input input[type="text"] {
+    text-align: center;
+}
+
+.client-input #client-connect-error {
+    text-align: center;
+    margin-top: 25px;
+    color: #c62828;
+}
+</style>
+
+<h2>Zadejte IP adresu serveru</h2>
+<div class="client-input">
+    <input class="form-control" type="text" id="client-ip"></input><br />
+    <input class="form-control" type="submit" value="Připojit" onclick="main.env.connect()"></input>
+    <div id="client-connect-error"></div>
+</div>
