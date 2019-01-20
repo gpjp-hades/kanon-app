@@ -10,11 +10,11 @@ if (process.argv.includes('help')) {
 
 Arguments:
 
-  full        - enable fullscreen
-  dev         - enable dev tools
-  clearDB     - clear database (Warning! List of all used books will be lost!)
-  server      - enable server mode
-  client [IP] - enable client mode
+  full    - enable fullscreen
+  dev     - enable dev tools
+  clearDB - clear database (Warning! List of all used books will be lost!)
+  server  - enable server mode
+  client  - enable client mode
 	`)
 	app.exit()
 }
