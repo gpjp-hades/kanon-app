@@ -6,3 +6,4 @@ exports.used = require("./used.js")
 
 exports.render = require("./render.js")
 exports.remote = require("./remote")
+exports.db = require("./db.js")

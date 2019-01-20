@@ -1,0 +1,70 @@
+<style>
+#help {
+    position: absolute;
+    bottom: 50px;
+    left: calc(50% - 150px);
+    width: 300px;
+    opacity: 0;
+}
+#pupilName {
+    position: absolute;
+    font-size: 22px;
+    left: 2.5%;
+    top: 61px;
+    width: calc(100vw - 5%);
+    z-index: -1;
+    text-align: center;
+    border-bottom: thin solid #d0d0d0;
+    padding-bottom: 5px;
+}
+#number {
+    position: absolute;
+    bottom: calc(50% - 100px);
+    left: 10%;
+    font-size: 100px;
+    width: 200px;
+    height: 200px;
+    line-height: 200px;
+    text-align: center;
+    background: #222;
+    border-radius: 100%;
+    color: #fff;
+    box-shadow: #222 0px 5px 13px -2px;
+    font-family: fantasy;
+}
+.dice {
+    position: absolute;
+    top: calc(50% - 34px);
+    right: calc(50% - 307px);
+    font-size: 30px;
+    z-index: 2;
+}
+#book {
+    opacity: 0;
+    z-index: -1;
+}
+#book span {
+    position: absolute;
+    font-size: 38px;
+    left: calc(10% + 300px);
+    top: calc(50% - 35px);
+    width: calc(100% - 400px);
+    z-index: -1;
+}
+#book small {
+    position: absolute;
+    font-size: 24px;
+    left: calc(10% + 300px);
+    bottom: calc(50% - -31px);
+    width: calc(100% - 400px);
+    z-index: -1;
+}
+</style>
+
+<div class="container">
+    <span id="number"></span>
+    <span id="pupilName"></span>
+    <button class="btn btn-lg btn-default dice" onclick='main.getBook()'>Vylosovat knihu &nbsp;<kbd>Enter</kbd></button>
+    <div id="book"></div>
+    <div id='help'>Pro ukončení stiskněte <kbd>Ctrl + Shift + K</kbd></div>
+</div>

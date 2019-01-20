@@ -8,7 +8,7 @@ const crossroads = require('crossroads')
 const controller = require('./controller')
 const { ipcRenderer } = require('electron')
 
-const {render, remote} = require('./lib')
+const {render, remote, db} = require('./lib')
 
 const main = new class {
 
@@ -19,6 +19,7 @@ const main = new class {
             router: crossroads,
             remoteClient: new remote.client(),
             remoteServer: new remote.server(),
+            db: new db()
         }
 
         this.mode = ipcRenderer.sendSync('process-type')

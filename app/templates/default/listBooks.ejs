@@ -1,4 +1,8 @@
-<%- include('../layout/navbar') -%>
+<%- include('../layout/navbar', {
+    menu: `<ul class="dropdown-menu">
+<li><a href="#" id="loadKanon" onclick="main.env.loadKanon()">Načíst kánon</a></li>
+<li class="disabled" id="loadPupil"><a href="#" onclick="main.env.loadPupil()">Načíst studenty</a></li>
+</ul>`}) -%>
 
 <style>
 
@@ -11,7 +15,7 @@
                 <option selected disabled>Zvolte studenta</option>
             </select>
             <br />
-            <button class="btn btn-success" onclick="return main.validate()">Spustit</button>
+            <button class="btn btn-success" onclick="return main.env.validate()">Spustit</button>
             <br />
             <br />
             <label>Dnes vyřazené knihy:</label>
@@ -27,7 +31,20 @@
 
 <%- include('../layout/footer') -%>
 
-<div class="alert alert-info alert-dismissible" style="display: none">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <span id='status'></span>
+<div id="continue-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Přejít k losování</h4>
+            </div>
+            <div class="modal-body">
+                Pro ukončení losování, stiskněte <kbd>Ctrl + Shift + <b>K</b></kbd>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick='main.startUserMode()'>Pokračovat</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Zrušit</button>
+            </div>
+        </div>
+    </div>
 </div>
