@@ -2,20 +2,27 @@
 const controller = require('../controller.js')
 
 class listBooks extends controller {
-    constructor(c) {
+    constructor(c, args) {
         super(c)
         
         this.container.render.file('default/listBooks')
-        
-        window.addEventListener('kanon-db-loaded', () => 
-            this.container.render.onload(() => this.showKanon())
-        )
-        window.addEventListener('pupils-db-loaded', () => 
-            this.container.render.onload(() => this.showPupils())
-        )
-        window.addEventListener('used-db-loaded', () => 
-            this.container.render.onload(() => this.showUsed())
-        )
+
+        if ('status' in args) {
+            this.status(args.status)
+        }
+
+        this.showKanon()
+        this.showPupils()
+        this.showUsed()
+    }
+
+    dispatch() {
+        // todo: server and client stuff
+        /*if (this.container.mode == 'server') {
+            this.container.remoteServer.send('ble')
+        }*/
+
+        this.container.router.parse('/default/draw', [{name: $('#pupils').val()}])
     }
 
     loadPupil() {
@@ -57,6 +64,9 @@ class listBooks extends controller {
                 break;
             case 'multiple':
                 this.status('Studenti byli přidáni')
+                break;
+            case 'format':
+                this.status('Soubor ' + name + ' nebyl rozpoznán')
                 break;
             default:
                 console.log(name, action)

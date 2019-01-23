@@ -1,0 +1,15 @@
+<%- include('./layout/navbar') -%>
+
+<style>
+.spinner {
+    position: absolute;
+    width: 30%;
+    left: 35%;
+    top: 29%;
+}
+</style>
+<div class="spinner">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-rolling"><circle cx="50" cy="50" fill="none" ng-attr-stroke="{{config.color}}" ng-attr-stroke-width="{{config.width}}" ng-attr-r="{{config.radius}}" ng-attr-stroke-dasharray="{{config.dasharray}}" stroke="#b4c7cf" stroke-width="10" r="40" stroke-dasharray="188.49555921538757 64.83185307179586" transform="rotate(230.645 50 50)"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1.3s" begin="0s" repeatCount="indefinite"></animateTransform></circle></svg>
+</div>
+
+<%- include('./layout/footer') -%>

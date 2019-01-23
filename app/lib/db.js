@@ -18,18 +18,16 @@ class db {
             
             if (data.kanon instanceof Array) {
                 this.kanon.fromJSON(data.kanon)
-                window.dispatchEvent(new Event('kanon-db-loaded'))
             }
 
             if (data.pupils instanceof Array) {
                 this.pupils.fromJSON(data.pupils)
-                window.dispatchEvent(new Event('pupils-db-loaded'))
             }
 
             if (data.used instanceof Object) {
                 this.used.fromJSON(data.used)
-                window.dispatchEvent(new Event('used-db-loaded'))
             }
+            window.dispatchEvent(new Event('db-ready'))
         })
     }
 
@@ -52,7 +50,7 @@ class db {
         }
     }
 
-    loadPupil(callback, error) {
+    loadPupil(callback) {
         let files = dialog.showOpenDialog({properties: ['openFile', 'multiSelections'], filters: [{name: 'Student', extensions: ['gms']}]})
         
         if (files) {
@@ -68,7 +66,7 @@ class db {
                         var parsed = output.map(e => {return parseInt(e[0].substring(1))})
                         
                         if (!(parsed instanceof Array) || parsed.length == 0) {
-                            error(file)
+                            callback(file, 'format')
                             return
                         }
                         

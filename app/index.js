@@ -10,19 +10,35 @@ const { ipcRenderer } = require('electron')
 
 const {render, remote, db} = require('./lib')
 
+/**
+ * plan:
+ * on student selection, book si selected but not drawn
+ * 
+ * todo:
+ * 
+ * make everything more robust (catch and display warnings)
+ * create errors lib
+ * add hybrid logging to everything (dev tools + file)
+ * 
+ * make sure app works if connection fails
+ * try to auto-reconnect (broadcast to find server maybe?)
+ */
 const main = new class {
 
     constructor() {
+
+        this.mode = ipcRenderer.sendSync('process-type')
+
+        window.addEventListener('db-ready', () => this.init())
 
         this.container = {
             render: new render(),
             router: crossroads,
             remoteClient: new remote.client(),
             remoteServer: new remote.server(),
-            db: new db()
+            db: new db(),
+            mode: this.mode
         }
-
-        this.mode = ipcRenderer.sendSync('process-type')
 
         this.route('/client', controller.client.query)
         this.route('/client/wait', controller.client.wait)
@@ -30,7 +46,15 @@ const main = new class {
         this.route('/server', controller.server.ips)
 
         this.route('/default', controller.default.listBooks)
+        this.route('/default/draw', controller.default.draw)
 
+        // start the app
+        this.route('/loading', controller.loading)
+        this.container.router.parse('/loading')
+
+    }
+
+    init() {
         switch(this.mode) {
             case 'server' : this.container.router.parse('/server'); break
             case 'client' : this.container.router.parse('/client'); break
@@ -39,11 +63,11 @@ const main = new class {
     }
 
     route(path, callable) {
-        this.container.router.addRoute(path, () => this.createEnv(callable))
+        this.container.router.addRoute(path, (args) => this.createEnv(callable, args))
     }
 
-    createEnv(callable) {
-        this.env = new callable(this.container)
+    createEnv(callable, args = {}) {
+        this.env = new callable(this.container, args)
         return this.env
     }
 
