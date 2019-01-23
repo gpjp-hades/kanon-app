@@ -10,7 +10,7 @@ class draw extends controller {
 
         window.addEventListener('draw-done', () => this.saveBook())
 
-        this.container.render.file('server/draw', {book: this.book})
+        this.container.render.file('server/draw')
     }
 
     destructor() {
@@ -42,7 +42,7 @@ class draw extends controller {
 
         $('#back').html('Zpět')
         $('#title').html('Student si vylosoval knihu')
-        $('#heading').html('')
+        $('#book').html(this.book.toString())
     }
 }
 
