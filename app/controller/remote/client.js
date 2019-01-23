@@ -33,11 +33,24 @@ class client extends controller {
             let message = data.toString().substr(2)
             switch (data.toString().substr(0, 2)) {
                 case 'OK':
-                    this.container.render.file('client/wait')
+                    this.container.router.parse('/client/wait')
                     break
+
                 case 'DR':
-                    this.container.router.parse('/default/draw', [JSON.parse(message)])
+                    let json = JSON.parse(message)
+                    if (
+                        (! json) ||
+                        (! 'name' in json) ||
+                        (! 'book' in json) ||
+                        (json.book.length != 4)
+                    ) break // should run another request
+
+                    this.container.router.parse('/default/draw', [json])
                     break
+                case 'CL':
+                    this.container.router.parse('/client/wait')
+                    break
+                    
                 default:
                     console.log(data);
                     break;

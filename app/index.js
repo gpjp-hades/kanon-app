@@ -29,6 +29,7 @@ const main = new class {
     constructor() {
 
         this.mode = ipcRenderer.sendSync('process-type')
+        this.env = {}
 
         window.addEventListener('db-ready', () => this.init())
 
@@ -43,13 +44,19 @@ const main = new class {
         }
 
         this.route('/client', controller.remote.client)
+        this.route('/client/wait', controller.client.wait)
+        
         this.route('/server', controller.remote.server)
+        this.route('/server/draw', controller.server.draw)
+        this.route('/server/empty', controller.server.empty)
 
         this.route('/default', controller.default.manage)
         this.route('/default/draw', controller.default.draw)
 
-        // start the app
+        
         this.route('/loading', controller.loading)
+        this.container.router.addRoute('/quit', () => this.close())
+
         this.container.router.parse('/loading')
 
     }
@@ -67,6 +74,10 @@ const main = new class {
     }
 
     createEnv(callable, args = {}) {
+        if ('destructor' in this.env) {
+            this.env.destructor()
+        }
+        
         this.env = new callable(this.container, args)
         this.container.render.onload(() => this.env.invoke())
         

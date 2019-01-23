@@ -10,6 +10,8 @@ class server extends controller {
         this.server = this.container.remoteServer
         this.server.createServer((err, data) => {
             if (err) {
+                this.state = 0
+
                 if ('code' in err) {
                     switch (err.code) {
                         case 'EADDRINUSE': this.warn('Port 42000 je obsazen');break
@@ -29,6 +31,11 @@ class server extends controller {
                         this.container.router.parse('/default')
                     }
                     break;
+                
+                case 'DN':
+                    window.dispatchEvent(new Event('draw-done'))
+                    break
+
                 default:
                     console.log(data);
                     break;

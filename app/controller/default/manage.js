@@ -22,11 +22,18 @@ class manage extends controller {
         let name = $('#pupils').val()
 
         if (this.container.mode == 'server') {
-            
-            this.container.remoteServer.send('DR' + JSON.stringify({
-                name: name,
-                book: this.container.db.used.getBook(this.container.db.pupils.get(name))
-            }))
+
+            let book = this.container.db.used.getBook(this.container.db.pupils.get(name))
+
+            if (!book) {
+                this.container.router.parse('/server/empty')
+            } else {
+                this.container.remoteServer.send('DR' + JSON.stringify({
+                    name: name,
+                    book: book
+                }))
+                this.container.router.parse('/server/draw', [{name: name, book: book}])
+            }
         } else {
             this.container.router.parse('/default/draw', [{name: name}])
         }

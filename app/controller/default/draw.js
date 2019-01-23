@@ -29,6 +29,10 @@ class draw extends controller {
         this.container.render.file('default/draw')
     }
 
+    destructor() {
+        clearInterval(this.changer)
+    }
+
     invoke() {
         this.container.mousetrap.bind('enter', () => {
             this.getBook()
@@ -49,7 +53,11 @@ class draw extends controller {
     }
 
     quit() {
-        this.container.router.parse('/default')
+        if (this.container.mode == 'client') {
+            this.container.router.parse('/quit')
+        } else {
+            this.container.router.parse('/default')
+        }
     }
 
     startNumberLoop() {
@@ -75,6 +83,7 @@ class draw extends controller {
                 book = new Book(...this.args.book)
             } else {
                 book = this.drawBook()
+                $('#help').delay(20 * 1000).animate({opacity: 0.7}, 3000)
             }
             
             if (book) {
@@ -84,9 +93,11 @@ class draw extends controller {
                 $('#book').html("<span>Všechny knihy již byly vylosovány</span>")
                 $('#number').html("")
             }
+
+            this.container.remoteClient.send('DN')
     
             $('#book').delay(1000).animate({opacity: 1}, 800)
-            $('#help').delay(20 * 1000).animate({opacity: 0.7}, 3000)
+
         }
     }
     

@@ -1,0 +1,29 @@
+<%- include('../layout/navbar', {type: 'Server'}); -%>
+<style>
+h2 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+h3 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+#book {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 38px;
+    width: 100%;
+    text-align: center;
+    margin-top: 36px;
+}
+</style>
+<button onclick='main.env.back()' id='back'>Zrušit</button>
+<h2 id='title'>Losování</h2>
+<div id="book">
+<h3 id='heading'>Student si vylosuje</h3>
+<%- book -%>
+</div>
+
+<%- include('../layout/footer'); -%>
