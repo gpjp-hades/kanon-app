@@ -1,9 +1,10 @@
 'use strict'
 const controller = require('../controller.js')
+const Book = require('../../lib/book.js')
 
 class draw extends controller {
     constructor(c, args) {
-        super(c)
+        super(c, args)
 
         this.gotBook = false
 
@@ -11,13 +12,19 @@ class draw extends controller {
             this.container.router.parse('/default', [{status: "Student nespecifikován"}])
             return
         }
+        
+        if (this.container.mode == 'client') {
+            this.name = args.name
 
-        if (!this.container.db.pupils.has(args.name)) {
-            this.container.router.parse('/default', [{status: "Student " + args.name + " nenalezen"}])
-            return
+        } else {
+            if (!this.container.db.pupils.has(args.name)) {
+                this.container.router.parse('/default', [{status: "Student " + args.name + " nenalezen"}])
+                return
+            }
+
+            this.pupil = this.container.db.pupils.get(args.name)
+            this.name = this.pupil.name
         }
-
-        this.pupil = this.container.db.pupils.get(args.name)
 
         this.container.render.file('default/draw')
     }
@@ -33,7 +40,7 @@ class draw extends controller {
 
         $('.dice').removeAttr('style').stop()
         $('#book').html('').removeAttr('style').stop()
-        $("#pupilName").html(this.pupil.name)
+        $("#pupilName").html(this.name)
         $(".normalMode").css("display", "none")
         $(".userMode").css("display", "initial")
         $('#help').stop().clearQueue().removeAttr('style')
@@ -61,8 +68,14 @@ class draw extends controller {
             this.gotBook = true
     
             $('.dice').animate({opacity: 0, width: 0}, 800)
-    
-            let book = this.drawBook()
+            
+            let book
+
+            if (this.container.mode == 'client') {
+                book = new Book(...this.args.book)
+            } else {
+                book = this.drawBook()
+            }
             
             if (book) {
                 $('#book').html(book.toHTML())
@@ -79,6 +92,7 @@ class draw extends controller {
     
     drawBook() {
         let book = this.container.db.used.getBook(this.pupil)
+        this.container.db.used.addBook(book.id)
         this.container.db.save('used', this.container.db.used)
         return book
     }

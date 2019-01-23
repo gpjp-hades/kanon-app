@@ -1,6 +1,6 @@
 exports.controller = require("./controller.js")
 exports.loading = require("./loading.js")
 
-exports.client = require("./client")
-exports.server = require("./server")
+exports.remote = require("./remote")
+
 exports.default = require("./default")

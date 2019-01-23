@@ -55,7 +55,7 @@ class used {
             return false
         
         let book = selectable[Math.floor(Math.random()*selectable.length)]
-        this.list[this.date.getDate()].push(book.id)
+        //this.list[this.date.getDate()].push(book.id)
         
         return book
     }

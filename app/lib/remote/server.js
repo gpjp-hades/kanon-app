@@ -20,7 +20,7 @@ class server {
         this.socket.write('SR' + data)
     }
 
-    createServer(callback, error) {
+    createServer(callback) {
         if (typeof this.server == 'object')
             return
         
@@ -34,6 +34,7 @@ class server {
 
             this.socket = socket
             socket.setEncoding("utf8")
+            socket.setKeepAlive(true, 5 * 1000)
 
             socket.write('SH') // hello
 
@@ -48,7 +49,7 @@ class server {
                         socket.write('SROK')
                         break
                     case 'CM':
-                        callback(message)
+                        callback(void(0), message)
                         break
                     default:
                         socket.write('TM')
@@ -58,12 +59,14 @@ class server {
                 }
             })
 
-            socket.on('error', error)
+            socket.on('error', err => callback(err))
             socket.on('close', () => {
                 this.clientCount = 0
                 this.writable = false
             })
         })
+
+        this.server.on('error', err => callback(err))
 
         this.server.listen(this.port, this.ip)
     }

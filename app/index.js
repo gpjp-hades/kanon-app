@@ -42,10 +42,8 @@ const main = new class {
             mousetrap: Mousetrap
         }
 
-        this.route('/client', controller.client.query)
-        this.route('/client/wait', controller.client.wait)
-
-        this.route('/server', controller.server.ips)
+        this.route('/client', controller.remote.client)
+        this.route('/server', controller.remote.server)
 
         this.route('/default', controller.default.manage)
         this.route('/default/draw', controller.default.draw)

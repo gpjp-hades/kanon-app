@@ -19,12 +19,17 @@ class manage extends controller {
     }
 
     dispatch() {
-        // todo: server and client stuff
-        /*if (this.container.mode == 'server') {
-            this.container.remoteServer.send('ble')
-        }*/
+        let name = $('#pupils').val()
 
-        this.container.router.parse('/default/draw', [{name: $('#pupils').val()}])
+        if (this.container.mode == 'server') {
+            
+            this.container.remoteServer.send('DR' + JSON.stringify({
+                name: name,
+                book: this.container.db.used.getBook(this.container.db.pupils.get(name))
+            }))
+        } else {
+            this.container.router.parse('/default/draw', [{name: name}])
+        }
     }
 
     loadPupil() {

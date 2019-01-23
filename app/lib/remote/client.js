@@ -16,7 +16,7 @@ class client {
         this.client.write('CM' + data)
     }
 
-    connect(ip, callback, error) {
+    connect(ip, callback) {
         if (typeof this.client == 'object' && !this.client.destroyed)
             return
         
@@ -37,7 +37,7 @@ class client {
                     this.client.destroy()
                     this.writable = false
 
-                    error('TOOMANY')
+                    callback(new Error('Too many clients'))
                     break
                 
                 case 'SH': // hello
@@ -48,24 +48,26 @@ class client {
                     break
                 
                 case 'SR': // server response
-                    callback(message)
+                    if (message == 'OK')
+                        this.client.write('CMOK')
+                    callback(void(0), message)
                     break
 
                 default:
                     this.writable = false
                     client.destroy()
                     
-                    error('SERVERERR')
+                    callback(new Error('Server error'))
                     break
             }
 
         })
 
-        this.client.on('error', error)
+        this.client.on('error', callback)
         this.client.setTimeout(3000, () => {
             this.writable = false
             client.destroy()
-            error('TIMEOUT')
+            callback(new Error('Timeout'))
         })
     }
 }
