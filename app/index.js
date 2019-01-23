@@ -1,10 +1,11 @@
 'use strict'
 window.$ = window.jQuery = require('jquery')
+const Mousetrap = require('mousetrap')
 const {shell} = require('electron').remote
 const BrowserWindow = require('electron').remote.getCurrentWindow()
 require('bootstrap')
 
-const crossroads = require('crossroads')
+const Crossroads = require('crossroads')
 const controller = require('./controller')
 const { ipcRenderer } = require('electron')
 
@@ -33,11 +34,12 @@ const main = new class {
 
         this.container = {
             render: new render(),
-            router: crossroads,
+            router: Crossroads,
             remoteClient: new remote.client(),
             remoteServer: new remote.server(),
             db: new db(),
-            mode: this.mode
+            mode: this.mode,
+            mousetrap: Mousetrap
         }
 
         this.route('/client', controller.client.query)
@@ -68,6 +70,8 @@ const main = new class {
 
     createEnv(callable, args = {}) {
         this.env = new callable(this.container, args)
+        this.container.render.onload(() => this.env.invoke())
+        
         return this.env
     }
 

@@ -1,7 +1,8 @@
 
 class controller {
-    constructor(c) {
+    constructor(c, args) {
         this.container = c
+        this.args = args
     }
 
     status(message) {
@@ -10,6 +11,10 @@ class controller {
         $('#status').parent().removeAttr('style')
         $('#status').html(message)
         $("#status").parent().fadeTo(2000, 500).slideUp(500)
+    }
+
+    invoke() {
+        null
     }
 }
 

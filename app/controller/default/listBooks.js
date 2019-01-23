@@ -3,12 +3,14 @@ const controller = require('../controller.js')
 
 class listBooks extends controller {
     constructor(c, args) {
-        super(c)
-        
-        this.container.render.file('default/listBooks')
+        super(c, args)
 
-        if ('status' in args) {
-            this.status(args.status)
+        this.container.render.file('default/listBooks')
+    }
+
+    invoke() {
+        if ('status' in this.args) {
+            this.status(this.args.status)
         }
 
         this.showKanon()
