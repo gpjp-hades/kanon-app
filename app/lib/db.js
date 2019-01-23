@@ -36,15 +36,21 @@ class db {
 
         if (file) {
             fs.readFile(file[0], 'utf8', (err, data) => {
-                if (err) throw err
+                if (err) {
+                    callback(err)
+                    return
+                }
 
                 parse(data, {delimiter: ';'}, (err, output) => {
-                    if (err) throw err
+                    if (err) {
+                        callback(err)
+                        return
+                    }
 
                     this.kanon.fromFile(output)
 
                     this.save('kanon', this.kanon)
-                    callback(this.kanon.length)
+                    callback(void(0), this.kanon)
                 })
             })
         }
@@ -56,17 +62,23 @@ class db {
         if (files) {
             files.forEach(file => {
                 fs.readFile(file, 'utf8', (err, data) => {
-                    if (err) throw err
+                    if (err) {
+                        callback(err)
+                        return
+                    }
                     
                     let name = data.substr(0, data.indexOf("\n")).replace("\r", "")
     
                     parse(data.substr(data.indexOf("\n")+1), {delimiter: ';'}, (err, output) => {
-                        if (err) throw err
+                        if (err) {
+                            callback(err)
+                            return
+                        }
 
                         var parsed = output.map(e => {return parseInt(e[0].substring(1))})
                         
                         if (!(parsed instanceof Array) || parsed.length == 0) {
-                            callback(file, 'format')
+                            callback(void(0), {action: 'format', name: file})
                             return
                         }
                         
@@ -76,15 +88,15 @@ class db {
                         if (files.length > 1) {
                             null
                         } else if (this.pupils.has(name)) {
-                            callback(name, 'append')
+                            callback(void(0), {action: 'append', name: name})
                         } else {
-                            callback(name, 'create')
+                            callback(void(0), {action: 'create', name: name})
                         }
                     })
                 })
             })
             if (files.length > 1)
-                callback(null, 'multiple')
+                callback(void(0), {action: 'multiple'})
         }
     }
 

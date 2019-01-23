@@ -28,7 +28,40 @@ class manage extends controller {
     }
 
     loadPupil() {
-        this.container.db.loadPupil((e, f) => this.alertPupil(e, f), console.log)
+        if (!this.container.db.kanon.length) {
+            this.status('Nejprve nahrajte kánon')
+            return
+        }
+        this.container.db.loadPupil((err, data) => {
+            if (err) {
+                if ('message' in err && err.message.indexOf('Number of columns is inconsistent') == 0) {
+                    let split = err.message.split(' ')
+                    this.status('Chyba v souboru na řádku ' + split[split.length - 1])
+                } else {
+                    this.warn(err.message)
+                }
+                return
+            }
+
+            switch (data.action) {
+                case 'create':
+                    this.status('Student(ka) ' + data.name + ' byl(a) přidán(a)')
+                    break;
+                case 'append':
+                    this.status('Student(ka) ' + data.name + ' byl(a) aktualizován(a)')
+                    break;
+                case 'multiple':
+                    this.status('Studenti byli přidáni')
+                    break;
+                case 'format':
+                    this.status('Soubor ' + data.name + ' nebyl rozpoznán')
+                    break;
+                default:
+                    console.log(data)
+            }
+            
+            this.showPupils()
+        })
     }
 
     showPupils() {
@@ -36,62 +69,55 @@ class manage extends controller {
         this.container.db.pupils.toArray().sort((a, b) => (
             a.class > b.class
         )).forEach(pupil => {
-            if (!$('#pupils').has('optgroup.' + (pupil.class?pupil.class:"noclass")).length) {
+            if (!$('#pupils').has('optgroup.' + (pupil.class || "noclass")).length) {
                 $('#pupils').append($('<optgroup>', {
-                    class: (pupil.class?pupil.class:"noclass"),
+                    class: pupil.class || "noclass",
                     label: {
                         "a": "Oktáva A",
                         "b": "Oktáva B",
                         "c": "4. C",
                         "noclass": "Neznámá třída"
-                    }[pupil.class?pupil.class:"noclass"]
+                    }[pupil.class || "noclass"]
                 }))
             }
-            $('optgroup.' + (pupil.class?pupil.class:"noclass")).append($('<option>', {
+            $('optgroup.' + (pupil.class || "noclass")).append($('<option>', {
                 value: pupil.name,
                 text: pupil.name
             }))
         })
     }
 
-    alertPupil(name, action) {
-        this.showPupils()
-
-        switch (action) {
-            case 'create':
-                this.status('Student ' + name + ' byl přidán')
-                break;
-            case 'append':
-                this.status('Student ' + name + ' byl aktualizován')
-                break;
-            case 'multiple':
-                this.status('Studenti byli přidáni')
-                break;
-            case 'format':
-                this.status('Soubor ' + name + ' nebyl rozpoznán')
-                break;
-            default:
-                console.log(name, action)
-        }
-    }
-
     loadKanon() {
-        this.container.db.loadKanon(e => this.showKanon(e), console.log)
+        this.container.db.loadKanon((err, kanon) => {
+            if (err) {
+                if ('message' in err && err.message.indexOf('Number of columns is inconsistent') == 0) {
+                    let split = err.message.split(' ')
+                    this.status('Chyba v souboru na řádku ' + split[split.length - 1])
+                } else {
+                    this.warn(err.message)
+                }
+                return
+            }
+
+            if (kanon.length)
+                this.status('Načteno ' + kanon.length + ' knih')
+            
+            this.showKanon()
+        })
     }
 
-    showKanon(num) {
-        $('#loadKanon').html('Aktualizovat kánon')
-        $('#loadPupil').removeAttr('class')
-        $('#books').html(this.container.db.kanon.toHTML())
-
-        if (typeof num == 'number')
-            this.status('Načteno ' + num + ' knih')
+    showKanon() {
+        if (this.container.db.kanon.length) {
+            $('#loadKanon').html('Aktualizovat kánon')
+            $('#loadPupil').removeAttr('class')
+            $('#books').html(this.container.db.kanon.toHTML())
+        }
         
         $("#books option").dblclick((e) => {
             let index = e.target.getAttribute('value')
             $("#change-modal .modal-title").html("Chcete knihu vyřadit?")
             $("#bookChange").html(this.container.db.kanon.books[index].toString() + " bude přidána mezi vyřazené knihy")
-            $("#bookChangeContinue").click(_ => {
+            $("#bookChangeContinue").click(() => {
                 this.container.db.used.addBook(index)
                 this.container.db.save('used', this.container.db.used)
                 this.showUsed()
@@ -104,7 +130,7 @@ class manage extends controller {
 
     validate() {
         if ($('#pupils').val()) {
-            $("#continue-modal").modal()
+            $("#continue-modal").modal("show")
         } else {
             this.status('Zvolte studenta')
             return false

@@ -32,7 +32,7 @@ nav .navbar-header {
         </span>
     </div>
     <ul class="normalMode nav navbar-nav navbar-right">
-        <li class="dropdown">
+        <li class="dropdown" style="margin-right: 7px">
             <% if (typeof menu == 'string' && menu.length > 0) { %>
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <span>Možnosti</span>
@@ -41,8 +41,8 @@ nav .navbar-header {
                 <%- menu -%>
             <% } %>
         </li>
-        <li style="margin-right: 7px"><button class="btn btn-xs btn-info navbar-btn pull-right" onclick="main.mini()">_</button></li>
-        <li style="margin-right: 25px"><button class="btn btn-xs btn-danger navbar-btn pull-right" data-toggle="modal" data-target="#close-modal">&times;</button></li>
+        <li style="margin-right: 7px"><button style="outline: none" class="btn btn-xs btn-info navbar-btn pull-right" onclick="main.mini()">_</button></li>
+        <li style="margin-right: 25px"><button style="outline: none" class="btn btn-xs btn-danger navbar-btn pull-right" data-toggle="modal" data-target="#close-modal">&times;</button></li>
     </ul>
 </nav>
 
