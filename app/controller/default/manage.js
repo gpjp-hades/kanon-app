@@ -1,11 +1,11 @@
 'use strict'
 const controller = require('../controller.js')
 
-class listBooks extends controller {
+class manage extends controller {
     constructor(c, args) {
         super(c, args)
 
-        this.container.render.file('default/listBooks')
+        this.container.render.file('default/manage')
     }
 
     invoke() {
@@ -132,4 +132,4 @@ class listBooks extends controller {
 
 }
 
-module.exports = listBooks
+module.exports = manage

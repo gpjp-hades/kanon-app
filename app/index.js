@@ -47,7 +47,7 @@ const main = new class {
 
         this.route('/server', controller.server.ips)
 
-        this.route('/default', controller.default.listBooks)
+        this.route('/default', controller.default.manage)
         this.route('/default/draw', controller.default.draw)
 
         // start the app
